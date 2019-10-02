@@ -55,7 +55,7 @@ Visualizer
 
 PRIORITY MATRIX
 
-![](./images/priority_matrix.jpeg)
+![](./images/priority_matrix.png)
 
 COMPONENT FLOW
 
