@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function StepPattern(){
+export default function StepPattern(props){
     return(
         <div className='steppattern'>
             <div className='instrument'>

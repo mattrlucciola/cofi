@@ -8,12 +8,13 @@ export default function Sequencer(props){
     function handleShowPattern(e){
         e.preventDefault();
         setShowPattern(!showPattern);
-        console.log(e);
+        console.log('this is pattern', e);
         console.log(showPattern, '\n');
     }
     return(
         <div className='sequencer'>
-            {showPattern ? <StepPattern handleShowPattern={handleShowPattern} />: <Automation />}
+            <div className='sequencer-toggle' onClick={e => props.handleSequencerToggle(e, showPattern, setShowPattern)} >{showPattern ? 'Pattern': 'Automation'}</div>
+            {showPattern ? <StepPattern />: <Automation />}
         </div>
     )
 }
