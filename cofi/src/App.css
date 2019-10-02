@@ -1,0 +1,16 @@
+.App {
+    text-align: center;
+}
+
+nav {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+}
+    nav .toggle {
+        display: flex;
+        flex-flow: row;
+    }
+    .title, nav .toggle div {
+        padding: 10px;
+    }

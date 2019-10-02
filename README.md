@@ -1,23 +1,26 @@
 # Audiovisual-Step-Sequencer
+
 This project is an audio (and visual) experience allowing the user to create rhythms and visual patterns with various instruments.
 
 DESCRIPTION
+
 A keyboard-controlled step sequencer that loads sounds from the internet and allows users to create and save a simple rhythms. Users can control several parameters including: tempo, instrument mute (toggle), instrument activation, volume automation.
 
 This project uses react to control several components within the page. This is a pseudo-multipage application, using React Router to link the user to different instrument modification like automation. Switching between pages while preserving track and instrument state requires some form of local storage to be used. The second page is for visualizations. The third page is a link to a component that clears the current board. the fourth link is a link to a song saving link
 
 
 MVP
+
 - Website with aesthetic formatting
 - Loads a sample pack from BandCamp/SoundCloud and assigns/maps sounds to keys
 - Sequencer
 - Toggle mute for instruments (click to toggle individual instruments, keypress to toggle all on/off mute, keypress to toggle all opposite values)
-- 
 - Change BPM
 - Routes to automation, sequencer, pattern visualizer, EQ visualizer
 
 
 PMVP
+
 - Paint splatter visual setting (still image, alternative to the transient visual)
 - Save MIDI to hard drive
 - Multiple sample packs
@@ -29,6 +32,7 @@ PMVP
     - Pitch
 
 TIMELINE
+
 | Component                   | Priority | Estimated Time | Time Invested | Time ∆   |
 | :-------------------------: | :------: | :------------: | :-----------: | :------: |
 | CSS Structuring             |    L     |   400 Min      |     0 min     | +0 min |
@@ -42,6 +46,7 @@ TIMELINE
 
 
 WIREFRAME
+
 Sequencer (Main)
 ![](./images/sequencer.png)
 
@@ -49,13 +54,19 @@ Visualizer
 ![](./images/visualizer.png)
 
 PRIORITY MATRIX
+
 ![](./images/priority_matrix.jpeg)
 
+COMPONENT FLOW
+
+![](./images/component_flow.png)
 
 API SAMPLE
+
 https://bandcamp.com/stat_record?kind=track%20play&track_id=1846085353&track_license_id&from=album%20page&from_url=https%3A%2F%2Fmillymusicgroup.bandcamp.com%2Falbum%2Ftalking-secret-single&phase=started&reference_num=134771774&band_id=3991463843&rand=4302376839957358
 
 REACT COMPONENT HIERARCHY
+
 - Sequencer
     - MIDI (instrument timings)
     - Automation
@@ -65,6 +76,7 @@ REACT COMPONENT HIERARCHY
 - BPM Switcher
 
 FUNCTIONAL COMPONENTS
+
 0) Main
     Area where user can navigate between sequencer and visualizer (and saved rhythms when functionality is built)
 1) Sequencer
