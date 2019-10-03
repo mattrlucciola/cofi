@@ -5,22 +5,26 @@ import Visualizer from './components/Visualizer';
 import Header from './components/Header';
 import BPMControl from './components/BPMControl';
 
-function handleKeyPress(e){
-    let key = e.key;
-    if (key === 'p'){
-        handleSequencerToggle(e)
-    }
-}
 
-function handleSequencerToggle(e, showPattern, setShowPattern){
-    console.log('toggled sequencer elem',e, showPattern, setShowPattern);
-    setShowPattern(!showPattern)
-}
 
-document.onkeypress = handleKeyPress
 
 function App() {
-    let [globalBPM, setGlobalBPM] = useState(128)
+    document.onkeypress = handleKeyPress
+    let [patternToggle, setPatternToggle] = useState(true);
+    let [globalBPM, setGlobalBPM] = useState(128);
+    
+    function handleKeyPress(e){
+        let key = e.key;
+        if (key === 'p'){
+            handleSequencerToggle(e, patternToggle, setPatternToggle)
+        }
+    }
+    
+    function handleSequencerToggle(e){
+        setPatternToggle(!patternToggle)
+    }
+
+
     function getBPM(bpm){
         console.log('this is bpm: ', bpm);
         setGlobalBPM(Number(bpm));
@@ -30,7 +34,7 @@ function App() {
         <div className="App">
             <Header />
             <BPMControl getBPM={getBPM} />
-            <Sequencer globalBPM={globalBPM} handleSequencerToggle={handleSequencerToggle} />
+            <Sequencer globalBPM={globalBPM} handleSequencerToggle={handleSequencerToggle} patternToggle={patternToggle} />
             <Visualizer globalBPM={globalBPM} />
         </div>
     );

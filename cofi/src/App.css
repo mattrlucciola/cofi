@@ -14,3 +14,37 @@ nav {
     .title, nav .toggle div {
         padding: 10px;
     }
+
+.step-pattern {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+    .instrument-container {
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        padding: 1px;
+    }
+        .instrument {
+            background: red;
+            margin: 0;
+            padding: 10px;
+            width: 100px;
+            border: 1px solid rgba(0, 0, 0, 0.164);
+            overflow: hidden;
+        }
+        .pattern {
+            display: flex;
+            flex-flow: row;
+            align-items: center;
+            padding: 1px;
+        }
+            .step {
+                background: rgb(87, 107, 126);
+                border: .5px solid rgba(0, 0, 0, 0.137);
+                padding: 16px;
+            }
+            .step.active {
+                background: rgb(71, 92, 112);
+            }

@@ -35,14 +35,14 @@ TIMELINE
 
 | Component                   | Priority | Estimated Time | Time Invested | Time ∆   |
 | :-------------------------: | :------: | :------------: | :-----------: | :------: |
-| CSS Structuring             |    L     |        400 Min |         0 min |   +0 min |
-| Component Design            |    H     |        120 Min |        30 min |   +0 min |
+| CSS Structuring             |    L     |        400 Min |        30 min |   +0 min |
+| Component Design            |    H     |        120 Min |        60 min |   +0 min |
 | Get & Assign Samples Algo   |    H     |        300 Min |         0 min |   +0 min |
-| Create Sequencer            |    H     |        240 Min |         0 min |   +0 min |
+| Create Sequencer            |    H     |        240 Min |        30 min |   +0 min |
 | Create BPM controller       |    M     |        100 Min |       120 min |  +20 min |
 | Create Pattern Visualizer   |    M     |        180 Min |         0 min |   +0 min |
 | Create Automation Window    |    H     |        200 Min |         0 min |   +0 min |
-|            TOTAL            |   N/A    |       1440 Min |       120 min |  +20 min |
+|            TOTAL            |   N/A    |       1440 Min |       210 min |  +20 min |
 
 
 WIREFRAME
@@ -63,7 +63,7 @@ COMPONENT FLOW
 
 API SAMPLE
 
-https://bandcamp.com/stat_record?kind=track%20play&track_id=1846085353&track_license_id&from=album%20page&from_url=https%3A%2F%2Fmillymusicgroup.bandcamp.com%2Falbum%2Ftalking-secret-single&phase=started&reference_num=134771774&band_id=3991463843&rand=4302376839957358
+![](./images/api_response.png)
 
 REACT COMPONENT HIERARCHY
 
