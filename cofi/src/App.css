@@ -2,6 +2,17 @@
     text-align: center;
 }
 
+.transport {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+}
+    .transport div {
+        background: rgb(191, 191, 212);
+        padding: 10px;
+        margin: 1px;
+    }
+
 nav {
     display: flex;
     flex-flow: row;

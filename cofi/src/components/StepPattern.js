@@ -1,35 +1,37 @@
 import React from 'react';
 
-export default function StepPattern(props){
-    let {instruments, setInstruments} = props.instObj
+export default function StepPattern({instruments, toggleStep}){
+    
 
     function clickStepHandler(e) {
         let elem = e.target;
 
         // turn a diff color and mark as active
         elem.className = elem.className.includes(' active') ? elem.className.replace(' active', ''): `${elem.className} active`;
+        
     }
     function drawPatternMap(instruments){
-        console.log('instruments- step pattern', instruments);
-        instruments['kick']['pattern'][0] = 'lol'
-        console.log('instruments after mod- step pattern', instruments);
         let instElems = [];
-        for (let ii in instruments) {
-            let instrument = instruments[ii];
-            console.log(ii, instrument);
-            
+        for (let instName in instruments) {
+            let instrument = instruments[instName];
+            console.log(instName, instrument);
             instElems.push(
-                <div className='instrument-container'>
-                    <div className='instrument'>{ii}</div>
-                    <div className='pattern'>{instrument.pattern.map((step, i) => {
+                <div className='instrument-container' key={`ic-${instName}`}>
+                    <div className='instrument' key={`i${instName}`}>{`${instName}`}</div>
+                    <div className='pattern' key={`p${instName}`}>{instrument.pattern.map((obj, stepCt) => {
                         return(
-                             <div className='step' id={`${instrument.name}Step${i}`} onClick={clickStepHandler}></div>
+                            <div className='step' id={`${instrument.name}Step${stepCt}`} key={stepCt} onClick={
+                                (e) => {
+                                    toggleStep(instName, stepCt);
+                                    clickStepHandler(e)
+                                }}>
+                            </div>
                         )
                     })}</div>
                 </div>
             )
         }
-        console.log(instruments);
+        // console.log(instruments);
         return instElems
     }
     return(

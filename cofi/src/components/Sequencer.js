@@ -1,9 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import StepPattern from './StepPattern';
 import Automation from './Automation';
 
-let initInstState = {'triggered': false, 'activated': false}
 let stepCount = 32;
+
+// init instruments state
+let initInstState = {'triggered': false, 'activated': false, 'automation':{}}
 let instrumentsInit = {
     'kick': {},
     'snare': {},
@@ -13,23 +15,37 @@ let instrumentsInit = {
     'rim': {},
     'bell': {},
 }
-// init instruments state
 for (let inst in instrumentsInit) {
     let instObj = instrumentsInit[inst];
     instObj['pattern'] = new Array(stepCount).fill( initInstState )
 }
-export default function Sequencer(props){
-    let [showPattern, setShowPattern] = useState(true);
-    let [instruments, setInstruments] = useState(instrumentsInit);
-    
-    console.log('instruments- sequencer', instruments);
 
-    // update instrument state
-    
+export default function Sequencer(props){
+    let [instruments, setInstruments] = useState(instrumentsInit);
+    // let [playing, setPlaying] = useState(false);
+    // let [currentStep, setCurrentStep] = useState(-1);
+
+    // const toggleStop = () => {
+    //     setCurrentStep(-1);
+    //     setPlaying(false);
+    // }
+    // const togglePause = () => {
+    //     setPlaying(!playing);
+    // }
+    // const toggleMove = (change) => { // change = (+/-1)
+    //     setCurrentStep(currentStep + change)
+    // }
+    const toggleStep = (instName, stepCt) => {
+        const instrumentsCopy = {...instruments};
+        const {activated, ...other} = instrumentsCopy[instName]['pattern'][stepCt];
+        instrumentsCopy[instName]['pattern'][stepCt] = {activated: !activated, ...other};
+        setInstruments(instrumentsCopy);
+    };
+
     return(
         <div className='sequencer'>
-            <div className='sequencer-toggle' onClick={props.handleSequencerToggle} > {props.patternToggle ? 'Pattern': 'Automation'}</div>
-            {props.patternToggle ? <StepPattern instObj={{instruments, setInstruments}} />: <Automation instObj={{instruments, setInstruments}} />}
+            <div className='sequencer-toggle' onClick={props.handleSequencerToggle} > {props.automationToggle ? 'Pattern': 'Automation'}</div>
+            {props.automationToggle ? <StepPattern instruments={instruments} toggleStep={toggleStep} />: <Automation instruments={instruments} />}
         </div>
     )
 }

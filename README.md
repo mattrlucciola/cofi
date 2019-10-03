@@ -42,7 +42,8 @@ TIMELINE
 | Create BPM controller       |    M     |        100 Min |       120 min |  +20 min |
 | Create Pattern Visualizer   |    M     |        180 Min |         0 min |   +0 min |
 | Create Automation Window    |    H     |        200 Min |         0 min |   +0 min |
-|            TOTAL            |   N/A    |       1440 Min |       210 min |  +20 min |
+| Create Transport            |    M     |        200 Min |         0 min |   +0 min |
+|            TOTAL            |   N/A    |       1640 Min |       210 min |  +20 min |
 
 
 WIREFRAME
