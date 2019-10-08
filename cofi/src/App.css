@@ -1,17 +1,40 @@
 .App {
     text-align: center;
 }
-
-.transport {
+.transport-container {
     display: flex;
-    flex-flow: row;
-    justify-content: center;
+    flex-flow: column;
+    margin: 0;
+    align-items: center;
 }
-    .transport div {
-        background: rgb(191, 191, 212);
-        padding: 10px;
-        margin: 1px;
+    .transport {
+        background: grey;
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+        margin: 0;
+        padding: 5px;
     }
+        .transport div {
+            background: rgb(191, 191, 212);
+            padding: 20px;
+            margin: 0 1px;
+            line-height: 1;
+            font-size: 40px;
+            height: inherit;
+        }
+        .transport .stop {
+            font-size: 35px;
+            margin: 0;
+        }
+        .play-pause span {
+            /* padding: 0; */
+            font-size: 35px;
+        }
+            .transport .play {
+                margin-top: -5px;
+                /* font-size: 35px; */
+            }
 
 nav {
     display: flex;
@@ -52,10 +75,28 @@ nav {
             padding: 1px;
         }
             .step {
-                background: rgb(87, 107, 126);
+                background: rgb(116, 165, 167);
                 border: .5px solid rgba(0, 0, 0, 0.137);
                 padding: 16px;
             }
-            .step.active {
-                background: rgb(71, 92, 112);
+
+            .step[triggered="true"][activated="true"]{
+                background: rgb(72, 117, 114);
+            }
+            .step[triggered="true"][activated="false"]{
+                background: rgb(116, 165, 167);
+            }
+            .step[triggered="false"][activated="true"]{
+                background: rgb(75, 100, 122);
+            }
+            .step[triggered="false"][activated="false"]{
+                background: rgb(116, 142, 167);
+            }
+            .measure{
+                display: flex;
+                flex-flow: row;
+            }
+            .signatureSpacer{
+                all: unset;
+                padding: 5px;
             }

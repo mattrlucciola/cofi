@@ -35,15 +35,15 @@ TIMELINE
 
 | Component                   | Priority | Estimated Time | Time Invested | Time ∆   |
 | :-------------------------: | :------: | :------------: | :-----------: | :------: |
-| CSS Structuring             |    L     |        400 Min |        30 min |   +0 min |
-| Component Design            |    H     |        120 Min |        60 min |   +0 min |
-| Get & Assign Samples Algo   |    H     |        300 Min |         0 min |   +0 min |
-| Create Sequencer            |    H     |        240 Min |        30 min |   +0 min |
+| CSS Structuring             |    L     |        400 Min |       230 min |   +0 min |
+| Component Design            |    H     |        120 Min |        90 min |   +0 min |
+| Get & Assign Samples Algo   |    H     |        300 Min |        30 min |   +0 min |
+| Create Sequencer            |    H     |        240 Min |       200 min |   +0 min |
 | Create BPM controller       |    M     |        100 Min |       120 min |  +20 min |
 | Create Pattern Visualizer   |    M     |        180 Min |         0 min |   +0 min |
 | Create Automation Window    |    H     |        200 Min |         0 min |   +0 min |
-| Create Transport            |    M     |        200 Min |         0 min |   +0 min |
-|            TOTAL            |   N/A    |       1640 Min |       210 min |  +20 min |
+| Create Transport            |    M     |        200 Min |        60 min | -140 min |
+|            TOTAL            |   N/A    |       1640 Min |       730 min | -120 min |
 
 
 WIREFRAME
