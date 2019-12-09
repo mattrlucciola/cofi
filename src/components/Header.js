@@ -1,14 +1,5 @@
-// unused
-// App.js > Top.jsx > Header.jsx
+import React from 'react';
 
-// react
-import React from "react";
-
-// modules
-
-// components
-
-// start
 export default function Headers(){
     return(
         <nav className='header'>

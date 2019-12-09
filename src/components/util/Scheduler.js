@@ -1,55 +1,64 @@
-import {AC} from './AudioContext';
-import {SilentNote} from '../instruments/SilentNote';
-
-const updateStepCount = (getters, setters) => {
-    
-    const {setPlayback, setCurrentStep} = setters;
-    const {scheduledStep, scheduledStepTime, scheduledEnd, playbackState} = getters;
-    let currentStepTimeStop = scheduledStepTime;
-    // set the next measureEnd, to calculate steps for next measure
-    (!!scheduledEnd) && setPlayback({type:'measureEnd', time:scheduledEnd});
-    // set the most recent step time, to prevent time collision with next step
-    setPlayback({type:'scheduledTime', time:currentStepTimeStop});
-    // finally, schedule the new step
-    setCurrentStep(scheduledStep);
+// apply gain for all notes
+const applyGain = (AC, source) => {
+    let gain = AC.createGain();
+    gain.gain.value = 0;
+    source['gain'] = gain;
+    return source;
 }
 
-const scheduleInstruments = (getters) => {
-    // destructuring props
-    const {scheduledStepTime, scheduledStep, instrumentsArr} = getters;
+// dynamic compress to prevent distortion
+const preventArtifacts = (source, startTime) => {
+    source['gain'].gain.value = 0;
+    source['gain'].gain.linearRampToValueAtTime(0.8, startTime + 0.09);
+}
 
-    let instrumentNotes = [];
-    for (let instIdx = 0; instIdx < instrumentsArr.length; instIdx++) {
-        const instrumentObj = instrumentsArr[instIdx];
-        let activated = instrumentObj['pattern'][scheduledStep]['activated'];
-        if (activated) {
-            let source = new (instrumentObj['source'])(AC);
-            instrumentNotes = source.trigger(scheduledStepTime, null);
+const connectNodes = (AC, source) => {
+    source['gain'].connect(AC.destination);
+    source['source'].connect(source['gain']);
+    // console.log('connected!');
+}
+export const scheduleNote = (AC, source, startTime, duration, callback, automation) => {
+    // 1) create the gain node
+    source = applyGain(AC, source);
+    console.log('start tiem here and source: ', startTime, source);
+    
+    // 2) prevent clipping and aliasing
+    preventArtifacts(source, startTime)
+    
+    // 4) schedule start and stop
+    source['gain'].gain.linearRampToValueAtTime(0, startTime + 0.2);
+    source['source'].start(startTime);
+    source['source'].stop(startTime + duration)
+
+    if (source['source'].frequency.value !== 666) {
+        connectNodes(AC, source);
+    }
+    // ) on end
+    source['source'].onended = callback;
+    // // 3) connect to the audio context destination and gain
+     
+    return source
+}
+
+// schedule a single step for all instruments
+export const scheduleStep = (AC, step, startTime, globalBPM, instruments) => {
+    // at this step, go thru each instrument, find active instruments play them
+    // go thru each instrument
+    for (let instrument in instruments){
+        // find active instrument
+        // console.log('gigg',instruments[instrument]['pattern'][step], AC, step, startTime, globalBPM, instruments);
+        
+        let activated = instruments[instrument]['pattern'][step]['activated'];
+        if (activated){
+            let source = new instruments[instrument]['source'](AC, instruments[instrument]['freq']);
+            console.log('my dource',source);
+
+            let automation = instruments[instrument]['pattern'][step]['automation'];
+            let stepTimeLength = 60 / globalBPM;
+            // console.log('scheduled! time= ', AC.currentTime, startTime, startTime-AC.currentTime);
+            // AC, {'source':note}, stepTime, stepLength
+            console.log('in step: start tiem here', startTime, AC.currentTime);
+            scheduleNote(AC, source, startTime, stepTimeLength/2);
         }
     }
-    return instrumentNotes
-}
-
-export const scheduleStep = (getters, setters) => {
-    let {playbackState} = getters;
-    let notesList = [];
-
-    // 2) schedule next step, update step, record scheduled time, set seed if -1 step
-    let SN = new SilentNote(AC, playbackState, false, 0);
-    let snNote = SN.trigger(getters, setters, updateStepCount);
-
-    // 3) schedule instruments step(n) to fire on next beat
-    let instrumentNotes = scheduleInstruments(getters)
-    // 4) (above) record this time in history so it does not repeat on next fire
-    // 5) record the note object so we can cancel their schedules
-    notesList = [...notesList, ...snNote, ...instrumentNotes]
-    return notesList
-}
-
-export const clearSchedule = (scheduleList) => {
-    scheduleList.forEach(note => {
-        note.stop(0);
-        note.onended = () => {};
-    });
-    scheduleList = [];
 }
