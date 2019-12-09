@@ -38,7 +38,7 @@ TIMELINE
 | CSS Structuring             |    L     |        400 Min |       230 min |   +0 min |
 | Component Design            |    H     |        120 Min |        90 min |   +0 min |
 | Get & Assign Samples Algo   |    H     |        300 Min |        30 min |   +0 min |
-| Create Sequencer            |    H     |        240 Min |       200 min |   +0 min |
+| Create Sequencer            |    H     |        240 Min |      2000 min |   +0 min |
 | Create BPM controller       |    M     |        100 Min |       120 min |  +20 min |
 | Create Pattern Visualizer   |    M     |        180 Min |         0 min |   +0 min |
 | Create Automation Window    |    H     |        200 Min |         0 min |   +0 min |
