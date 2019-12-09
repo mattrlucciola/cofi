@@ -26,6 +26,3 @@ node_modules
 .vscode
 .vscode/
 /.vscode
-
-src/
-/src
