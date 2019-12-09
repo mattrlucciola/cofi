@@ -218,7 +218,7 @@ function App() {
 
     return (
         <div className="App">
-            <a href='http://localhost:3002'>http://localhost:3002</a>
+            <a href='http://localhost:3001'>http://localhost:3001</a>
             {/* pre 1a. draw transport to support play/pause functionality */}
             <Top transportParams={{togglePause, playing}} />
             <Left />
