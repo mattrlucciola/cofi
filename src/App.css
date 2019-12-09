@@ -1,40 +1,21 @@
-/* ******************************************************************************************** */
-/* ************************************** GLOBAL CLASSES ************************************** */
-* {
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    /* margin: 0; padding: 0; */
-    /* position: relative; */
-    flex-shrink: 0;
-}
-html {
-    background: rgb(44, 45, 49);
-}
 .App {
     text-align: center;
-    /* left: 0; */
 }
-.fullwh {
-    /* width: 100%; height: 100%; */
-}
-.flexcol {display: flex; flex-flow: column;}
-.flexrow {display: flex; flex-flow: row;}
-/* ************************************** GLOBAL CLASSES ************************************** */
-/* ******************************************************************************************** */
-
 .transport-container {
     display: flex;
     flex-flow: column;
+    margin: 0;
     align-items: center;
 }
-    .transport-container .transport {
+    .transport {
         background: grey;
         display: flex;
         flex-flow: row;
         justify-content: center;
+        margin: 0;
         padding: 5px;
     }
-        .transport-container .transport div {
+        .transport div {
             background: rgb(191, 191, 212);
             padding: 20px;
             margin: 0 1px;
@@ -42,7 +23,7 @@ html {
             font-size: 40px;
             height: inherit;
         }
-        .transport-container .transport .stop {
+        .transport .stop {
             font-size: 35px;
             margin: 0;
         }
@@ -50,7 +31,7 @@ html {
             /* padding: 0; */
             font-size: 35px;
         }
-            .transport-container .transport .play {
+            .transport .play {
                 margin-top: -5px;
                 /* font-size: 35px; */
             }
@@ -68,306 +49,24 @@ nav {
         padding: 10px;
     }
 
-.fade-in {
-    opacity: 1;
-    animation-name: fadeInOpacity;
-    animation-iteration-count: 1;
-    animation-timing-function: ease-out;
-    animation-duration: .08s;
-}
-@keyframes fadeInOpacity {
-    0% {opacity: 0;}
-    100% {opacity: 1;}
-}
-/* //////////////////////////////////////////////////////////////////////////////////////// */
-/* ///////////////////////////////// Sequencer (BELOW) //////////////////////////////////// */
-.sequencer {
-    display: grid;
-    grid-template-columns: 250px auto;
-    position: relative;
-    /* width: inherit; */
-    height: 100%;
-    min-width: 600px; min-height: 400px;
-    background: white;
-}
-    .sequencer .sequencer-right .head, .sequencer .sequencer-left .transport {
-        height: 40px;
-    }
-    .sequencer .step {
-        width: 40px;
-    }
-    .sequencer .sequencer-right .instrument-list .instrument-container, .sequencer .sequencer-left .instrument-pattern-container .step-list {
-        position: relative;
-        background: red;
-        height: 150px;
-    }
-    /* *************************************************************************************** */
-    /* *********************************** sequencer right *********************************** */
-    .sequencer .sequencer-right {
-        position: relative;
-        background: darkcyan;
-        width: 250px;
-        min-width: 250px;
-    }
-        .sequencer .sequencer-right .head {
-            background: rgb(99, 84, 99);
-        }
-            .sequencer .sequencer-right .head .add-instrument {
-                /* position */
-                position: absolute;
-                right: 0;
-                margin: 0;
-                /* dimensions */
-                width: 40px; height: inherit;
-                padding: 0;
-                /* color */
-                background: rgb(56, 68, 100);
-                /* font */
-                font-size: 35px;
-                color: rgb(255, 237, 230);
-                /* interaction */
-                cursor: pointer;
-            }
-            .sequencer .sequencer-right .head .add-instrument.active {
-                background: rgb(83, 99, 143);
-            }
-            .sequencer .sequencer-right .head .add-instrument-card {
-                /* position */
-                position: absolute;
-                margin: 0px 0px 0px 250px;
-                z-index: 100;
-                /* dimensions */
-                width: 250px;
-                height: auto;
-                /* color */
-                background: rgb(90, 87, 119);
-            }
-                .sequencer .sequencer-right .head .add-instrument-card .instrument-add-obj-container {
-                    display: flex;
-                    flex-flow: row;
-                    justify-content: space-between;
-                }
-                .sequencer .sequencer-right .head .add-instrument-card .instrument-add-obj-container div {
-                    padding: 2px 10px;
-                    border: 1px solid rgb(133, 131, 131);
-                }
-                .sequencer .sequencer-right .head .add-instrument-card .instrument-add-obj-container .instrument-add-obj {
-                    width: 65%;
-                    text-align: left;
-                    border-right: none;
-                    cursor: pointer;
-                }
-                .sequencer .sequencer-right .head .add-instrument-card .instrument-add-obj-container .instrument-add-obj {
-                    cursor: pointer;
-                }
-                .sequencer .sequencer-right .head .add-instrument-card .instrument-add-obj-container .instrument-add-info {
-                    cursor: pointer;
-                }
-        .sequencer .sequencer-right .instrument-list {
-            position: relative;
-            width: 100%; height: 100%;
-            background: grey;
-        }
-            .sequencer .sequencer-right .instrument-list .instrument-container {
-            }
-                .sequencer .sequencer-right .instrument-list .instrument-container .top {
-
-                } 
-                    .sequencer .sequencer-right .instrument-list .instrument-container .top .instrument-id {
-                        background: green;
-                    }
-                .sequencer .sequencer-right .instrument-list .instrument-container .bottom {}
-                .sequencer .sequencer-right .instrument-list .instrument-container .bottom .instrument-settings {
-                    background: rgb(113, 211, 113);
-                }
-                .sequencer .sequencer-right .instrument-list .instrument-container .bottom .instrument-settings .amplitude {
-                    width: 100%;
-                    height: 100px;
-                    background: #d3d3d3;
-                    outline: none;
-                    opacity: 0.7;
-                    transition: opacity 0.2s;
-                }
-                .sequencer .sequencer-right .instrument-list .instrument-container .bottom .instrument-settings .amplitude:hover {
-                    opacity: 1;
-                }
-                .sequencer .sequencer-right .instrument-list .instrument-container .bottom .instrument-settings .amplitude:click {
-                    width: 25px; height: 25px;
-                    background: lavender;
-                    cursor: progress;
-                }
-    /* *********************************** sequencer right *********************************** */
-    /* *************************************************************************************** */
-
-    /* *************************************************************************************** */
-    /* *********************************** sequencer left *********************************** */
-    .sequencer .sequencer-left {
-        position: relative;
-        overflow-block: hidden;
-        min-height: 100%;
-    }
-        .sequencer .sequencer-left .left-container {
-            position: relative;
-            /* width: 100%; */
-            /* overflow-x: hidden; */
-            
-        }
-        .sequencer .step-list .step {
-            /* height: 100%; */
-            background: rgb(73, 100, 100);
-            box-shadow:0px 0px 0px 2px black inset;
-            width: 10px;
-            /* overflow: scroll; */
-        }
-            .sequencer .sequencer-left .transport {
-                position: relative;
-                /* width: 100%; */
-                /* max-width: 100%; */
-                background: cadetblue;
-            }
-                .sequencer .sequencer-left .transport .step-list {
-                    /* max-width: 100%; */
-                    /* width: 100%; */
-                    height: 100%;
-                }
-                    .sequencer .sequencer-left .transport .step-list .step {
-                        background: rgb(93, 153, 93);
-                    }
-            .sequencer .sequencer-left .instrument-pattern-container {
-                box-shadow:0px 0px 0px 2px black inset;
-                /* height: ; */
-            }
-                .sequencer .sequencer-left .instrument-pattern-container .step-list {
-                }
-                    .sequencer .sequencer-left .instrument-pattern-container .step-list .step {
-                        background: rgb(93, 149, 153);
-                    }
-                    .sequencer .sequencer-left .step[triggered="true"][activated="true"]{
-                        background: rgb(72, 117, 114);
-                    }
-                    .sequencer .sequencer-left .step[triggered="true"][activated="false"]{
-                        background: rgb(116, 165, 167);
-                    }
-                    .sequencer .sequencer-left .step[triggered="false"][activated="true"]{
-                        background: rgb(75, 100, 122);
-                    }
-                    .sequencer .sequencer-left .step[triggered="false"][activated="false"]{
-                        background: rgb(116, 142, 167);
-                    }
-    /* *********************************** sequencer left *********************************** */
-    /* *************************************************************************************** */
-
-    /* sequencer step pattern */
-    .sequencer .step-pattern {
-        /* position: absolute;
-        display: flex;
-        flex-flow: column;
-        justify-content: space-between;
-        margin: 0;
-        width: 100%; height: 100%;
-        background: grey; */
-    }
-        .sequencer .step-pattern .sequence-container {
-            /* background: green;
-            width: 100%; height: 100%;
-            max-height: 100px;
-            min-height: 75px;
-            overflow-x: scroll; */
-        }
-/* ///////////////////////////////// Sequencer (ABOVE) //////////////////////////////////// */
-/* //////////////////////////////////////////////////////////////////////////////////////// */
-
-/* .step-pattern {
+.step-pattern {
     display: flex;
     flex-flow: column;
     align-items: center;
-    overflow-x: scroll;
-    margin-left: 50px;
 }
-    .step-pattern-transport {
-        flex-flow: row;
-        align-items: center;
-        padding: 1px;
-        background: red;
-        left: 0;
-    }
-        .transport-step {
-            background: rgb(167, 136, 116);
-                border: .5px solid rgba(0, 0, 0, 0.137);
-                padding: 16px;
-        } */
-    
-    /*///////////////////////////////////////////////////////*/
-    /*///////////////////////////////////////////////////////*/
-
-    /* 
-    .instrument-transport-container {
+    .instrument-container {
         display: flex;
         flex-flow: row;
         align-items: center;
         padding: 1px;
     }
-        .instrument-transport {
-            background: rgb(175, 55, 39);
-            margin: 0;
-            width: 120px;
-            height: 40px;
-            border: 1px solid rgba(0, 0, 0, 0.164);
-            display: flex;
-            flex-flow: row;
-            justify-content: right;
-        }
-            .instrument-transport .add-instrument{
-                font-size: 35px;
-                margin: -1px -1px 0px 0;
-                border: 1px solid black;
-                padding: 0px 2px;
-                width: 30px;
-                cursor: pointer;
-                color: wheat;
-                background: rgb(56, 68, 100);
-                position: absolute;
-            }
-    */
-    /*  */
-    /* 
-    
-        .instrument-id {
+        .instrument {
             background: red;
             margin: 0;
             padding: 10px;
             width: 100px;
             border: 1px solid rgba(0, 0, 0, 0.164);
             overflow: hidden;
-        }
-        .instrument-background {
-            background: rgb(97, 63, 63);
-            position:absolute;
-            margin: -2%;
-            padding: 10px;
-            width: 100px;
-            border: 1px solid rgba(0, 0, 0, 0.164);
-            overflow: hidden;
-            z-index:-1;
-        }
-        .sequence-background {
-            background: rgb(117, 156, 91);
-            position:relative;
-            margin: -2%;
-            padding: 10px;
-            width: 100px;
-            border: 1px solid rgba(0, 0, 0, 0.164);
-            overflow: hidden;
-            z-index:-1;
-        }
-        .instrument-wrapper {
-            background: purple;
-        }
-        .pattern-wrapper {
-            background: green;
-            display: flex;
-            flex-flow: column;
-            align-items: center;
         }
         .pattern {
             display: flex;
@@ -400,4 +99,4 @@ nav {
             .signatureSpacer{
                 all: unset;
                 padding: 5px;
-            } */
+            }

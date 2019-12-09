@@ -1,6 +1,6 @@
-import {AC} from '../util/AudioContext';
 export default class Synth{
     constructor(AC, freq){
+        this.AC = AC;
         this.freq = freq;
         this.wave = 'sine';
         this.createNodes = this.createNodes.bind(this);
@@ -9,9 +9,9 @@ export default class Synth{
         this.setWaveform = this.setWaveform.bind(this);
         this.setBaseValues = this.setBaseValues.bind(this);
 
-        return this.setBaseValues(this.wave, freq);
+        return this.setBaseValues(this.wave, freq, AC);
     }
-    createNodes(){return {'source': AC.createOscillator()}}
+    createNodes(AC){return {'source': AC.createOscillator()}}
     setFreq(source, _freq_){
         source['source'].frequency.value = _freq_;
         return source
@@ -26,9 +26,9 @@ export default class Synth{
             source['source'].setPeriodicWave(wave);
         } else if (_wave_ === 'none'){}
     }
-    setBaseValues(_wave_, _freq_){
-        let source = this.createNodes();
-        this.setFreq(source, _freq_)
+    setBaseValues(_wave_, _freq_, AC){
+        let source = this.createNodes(AC);
+        this.setFreq(source, _freq_, AC)
         this.setWaveform(source, _wave_)
         return source
     }
