@@ -14,7 +14,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "move": "rm -rf ./static ./images ./assets ; mv -f ./build/* ./ && rm -rf ./build ; cp -r ./assets/* ./",
+    "git-add": "git add .",
+    "git-commit": "git commit -m '(re)building and deploying'",
+    "git-push": "git push origin gh-pages",
+    "git-deploy": "npm run git-add && npm run git-commit && npm run git-push",
+    "deploy": "npm run build && npm run move && npm run git-deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
