@@ -5,9 +5,7 @@ import Header from './components/Header';
 import TimingController from './components/TimingController';
 import Transport from './components/Transport';
 import Instruments from './components/Instruments';
-import {scheduleNote, scheduleStep} from './components/util/Scheduler';
-// import Visualizer from './components/Visualizer';
-// import Synth from './components/Synth';
+import {scheduleNote, scheduleStep} from './util/Scheduler';
 
 let thelist = [];
 function checkTiming(thelist, t){
