@@ -1,12 +1,22 @@
+// react
 import React, {useState, useEffect, useRef} from 'react';
+
+// modules
+
+// style
 import './App.css';
+
+// components
 import Sequencer from './components/sequencer/Sequencer';
 import Header from './components/Header';
 import TimingController from './components/TimingController';
 import Transport from './components/Transport';
 import Instruments from './components/Instruments';
+
+// utilities
 import {scheduleNote, scheduleStep} from './util/Scheduler';
 
+// global vars
 let thelist = [];
 function checkTiming(thelist, t){
     thelist.push(t);
@@ -28,8 +38,9 @@ function checkTiming(thelist, t){
 // set the global audio context here
 let AC = new (window.AudioContext || window.webkitAudioContext)()
 let stepList = []
-// misc global vars
-function App() {
+
+// main
+export default function App() {
     // timing states
     let [globalBPM, setGlobalBPM] = useState('128');
     let [inputBPM, setInputBPM] = useState(globalBPM);
@@ -199,4 +210,3 @@ function App() {
         </div>
     );
 }
-export default App;

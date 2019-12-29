@@ -1,5 +1,20 @@
+// App > Sequencer > StepPattern
+
+// react
 import React from 'react';
+
+// modules
+
+// style
+
+// components
 import Step from './Step';
+
+// utilities
+
+// global vars
+
+// main
 export default function StepPattern({instruments, toggleStep, timing}){
     let {timeSignature, currentStep} = timing;
 

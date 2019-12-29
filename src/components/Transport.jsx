@@ -1,5 +1,19 @@
+// App > Transport
+
+// react
 import React from 'react';
 
+// modules
+
+// style
+
+// components
+
+// utilities
+
+// global vars
+
+// main
 export default function Transport(props){
     function changePlayPause() {
         let pauseColor = props.playing !== true ? {color:'red'}:{color:'black'};

@@ -1,5 +1,19 @@
-import React from 'react'
+// App > Sequencer > StepPattern > Step
 
+// react
+import React from 'react';
+
+// modules
+
+// style
+
+// components
+
+// utilities
+
+// global vars
+
+// main
 export default function Step({toggleStep, instId, timing}){
     let {currentStep, stepCt, stepInfo} = timing;
     let triggered = `${currentStep===stepCt}`;

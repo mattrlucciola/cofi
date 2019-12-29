@@ -1,5 +1,20 @@
-import React from 'react'
+// App > TimingController
+
+// react
+import React from 'react';
+
+// modules
+
+// style
+
+// components
+
+// utilities
+
+// global vars
 let IB = '128';
+
+// main
 export default function TimingController({bpmObj, stepObj}){
     let {globalBPM, setGlobalBPM, inputBPM, setInputBPM} = bpmObj;
     let {currentStep} = stepObj;

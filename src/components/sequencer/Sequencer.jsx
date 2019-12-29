@@ -1,6 +1,21 @@
+// App > Sequencer
+
+// react
 import React from 'react';
+
+// modules
+
+// style
+
+// components
 import StepPattern from './StepPattern';
 import Automation from './Automation';
+
+// utilities
+
+// global vars
+
+// main
 
 export default function Sequencer({instruments, setInstruments, toggles, timing}){
     let {handleSequencerToggle, automationToggle} = toggles;
