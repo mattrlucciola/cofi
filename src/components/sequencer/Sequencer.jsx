@@ -9,7 +9,6 @@ import React from 'react';
 
 // components
 import StepPattern from './StepPattern';
-import Automation from './Automation';
 
 // utilities
 
@@ -30,7 +29,7 @@ export default function Sequencer({instruments, setInstruments, toggles, timing}
     return(
         <div className='sequencer'>
             <div className='sequencer-toggle' onClick={handleSequencerToggle} > {automationToggle ? 'Pattern': 'Automation'}</div>
-            {automationToggle ? <StepPattern instruments={instruments} toggleStep={toggleStep} timing={{timeSignature, currentStep}} />: <Automation instruments={instruments} />}
+            {automationToggle && <StepPattern instruments={instruments} toggleStep={toggleStep} timing={{timeSignature, currentStep}} />}
         </div>
     )
 }
