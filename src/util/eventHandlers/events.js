@@ -1,17 +1,14 @@
 import {clearSchedule} from '../Scheduler';
 import {adjustStep} from './adjustStep';
 
-export const toggleAdvance = (eventKey, currentStep, AC, scheduleList, playing, playbackState, setCurrentStep, globalObj) => {
-    // let change = (eventKey === ',' && (eventKey !== '.' || eventKey !== true)) ? -1 : 1;
-    // setCurrentStep(currentStep + change);
+export const toggleAdvance = (eventKey, currentStep, AC, playing, playbackState, setCurrentStep, globalObj) => {
     let newStep;
     if      (eventKey === ',') {newStep = currentStep - 1}
     else if (eventKey === '.') {newStep = currentStep + 1}
-    // adjustStep(newStep, playing, playbackState, setCurrentStep)
-    adjustStep(AC, scheduleList, playing, playbackState, newStep, setCurrentStep, globalObj['intervalId'], globalObj)
+    adjustStep(AC, playing, playbackState, newStep, setCurrentStep, globalObj['intervalId'], globalObj)
 }
 
-export const togglePause = (AC, scheduleList, playing, setPlaying, playbackState, setPlayback, currentStep) => {
+export const togglePause = (AC, playing, setPlaying, playbackState, setPlayback, currentStep, globalObj) => {
 
     // if youre turning it on (aka switching from pause to play), set the seed time and play the current-step's note
     if (!playing) {
@@ -25,7 +22,7 @@ export const togglePause = (AC, scheduleList, playing, setPlaying, playbackState
     };
     if (playing) {
         AC.state === 'running' && AC.suspend();
-        scheduleList = clearSchedule(scheduleList)
+        globalObj['scheduleList'] = clearSchedule(globalObj['scheduleList'])
         setPlaying(false);
     };
 }

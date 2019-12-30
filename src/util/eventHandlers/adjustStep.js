@@ -1,9 +1,9 @@
 import {clearSchedule} from '../Scheduler';
 
-export const adjustStep = (AC, scheduleList, playing, playbackState, newStep, setCurrentStep, globalObj) => {
+export const adjustStep = (AC, playing, playbackState, newStep, setCurrentStep, globalObj) => {
     // 1) cancel all scheduled events
     AC.status !== 'suspend' && AC.suspend();
-    clearSchedule(scheduleList);
+    clearSchedule(globalObj['scheduleList']);
     if (newStep >= playbackState['totalSteps']) {
         newStep = 0
     }

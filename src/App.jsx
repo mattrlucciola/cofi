@@ -25,11 +25,11 @@ import * as eventsObj from './util/eventHandlers/events';
 import './util/specifyBrowser';
 
 // global vars
-let scheduleList = [];
 const globalObj = {
     adjusted: false,
     timeoutComplete: true,
     intervalId: '',
+    scheduleList: [],
 };
 
 // main
@@ -69,9 +69,9 @@ export default function App(){
 
     // set all keypress events here
     const bindsObj = {
-        ' ': () => togglePause(AC, scheduleList, playing, setPlaying, playbackState, setPlayback),
-        ',': () => toggleAdvance(',', currentStep, AC, scheduleList, playing, playbackState, setCurrentStep, globalObj),
-        '.': () => toggleAdvance('.', currentStep, AC, scheduleList, playing, playbackState, setCurrentStep, globalObj),
+        ' ': () => togglePause(AC, playing, setPlaying, playbackState, setPlayback, globalObj),
+        ',': () => toggleAdvance(',', currentStep, AC, playing, playbackState, setCurrentStep, globalObj),
+        '.': () => toggleAdvance('.', currentStep, AC, playing, playbackState, setCurrentStep, globalObj),
     }
     assignGlobalKeyPress(bindsObj)
     assignGlobalClick(toggleState, setToggle)
@@ -131,7 +131,7 @@ export default function App(){
                 }
                 setPlayback({type:'queue', time: getters['scheduledStepTime'], step: getters['scheduledStep']});
                 notesList = scheduleStep(getters, setters);
-                scheduleList = [...scheduleList, ...notesList];
+                globalObj['scheduleList'] = [...globalObj['scheduleList'], ...notesList];
             }
         }
     }
