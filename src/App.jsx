@@ -19,6 +19,7 @@ import {AC} from './util/audio/AudioContext';
 import assignGlobalKeyPress from './util/eventHandlers/assignGlobalKeyPress';
 import assignGlobalClick from './util/eventHandlers/assignGlobalClick';
 import {useInterval} from './util/useInterval';
+import {fxn} from './util/scheduling/startInterval';
 import {clickToggleReducer} from './util/reducers/ClickToggleReducer';
 import {playbackReducer} from './util/reducers/PlaybackReducer';
 import * as eventsObj from './util/eventHandlers/events';
@@ -30,6 +31,7 @@ const globalObj = {
     timeoutComplete: true,
     intervalId: '',
     scheduleList: [],
+    notesList: [],
 };
 
 // main
@@ -69,7 +71,7 @@ export default function App(){
 
     // set all keypress events here
     const bindsObj = {
-        ' ': () => togglePause(AC, playing, setPlaying, playbackState, setPlayback, globalObj),
+        ' ': () => togglePause(AC, playing, setPlaying, playbackState, setPlayback, currentStep, globalObj),
         ',': () => toggleAdvance(',', currentStep, AC, playing, playbackState, setCurrentStep, globalObj),
         '.': () => toggleAdvance('.', currentStep, AC, playing, playbackState, setCurrentStep, globalObj),
     }
@@ -80,19 +82,19 @@ export default function App(){
 
     // other init vars for the interval
     let setters = {setCurrentStep, setPlayback};
-    let notesList = [];
     const startInterval = () => {
         let getters = {stopped, playbackState, instrumentsArr, globalObj};
         if (stopped && globalObj['adjusted'] === false){// if starting from stopped
-            let _t_ = AC.currentTime + 0.01;
-            let measureEnd = _t_ + (playbackState['totalSteps'] * playbackState['stepLength']);
-            setPlayback({type:'measureEnd', time:measureEnd});
-            console.log('scheduling from stopped position');
-            getters['scheduledStepTime'] = _t_;
-            getters['scheduledStep'] = 0;
-            getters['scheduledEnd'] = getters['scheduledStepTime'] + playbackState['totalSteps'] * playbackState['stepLength'];
-            notesList = scheduleStep(getters, setters);
-            setStopped(false);
+            fxn(AC.currentTime, playbackState, setPlayback, getters, globalObj, setters, setStopped)
+            // let _t_ = AC.currentTime + 0.01;
+            // let measureEnd = _t_ + (playbackState['totalSteps'] * playbackState['stepLength']);
+            // setPlayback({type:'measureEnd', time:measureEnd});
+            // console.log('scheduling from stopped position');
+            // getters['scheduledStepTime'] = _t_;
+            // getters['scheduledStep'] = 0;
+            // getters['scheduledEnd'] = getters['scheduledStepTime'] + playbackState['totalSteps'] * playbackState['stepLength'];
+            // notesList = scheduleStep(getters, setters);
+            // setStopped(false);
         } else if (globalObj['adjusted'] && globalObj['timeoutComplete']) {// play current step, set the seed/end to THAT step, then schedule following step
             console.log('scheduling from adjusted position');
             // turn this (adj) back off
@@ -100,7 +102,7 @@ export default function App(){
             getters['scheduledStep'] = currentStep;
             let stepsLeft = playbackState['totalSteps'] - getters['scheduledStep'];
             getters['scheduledEnd'] = getters['scheduledStepTime'] + (stepsLeft * playbackState['stepLength']);
-            notesList = scheduleStep(getters, setters);
+            globalObj['notesList'] = scheduleStep(getters, setters);
             globalObj['adjusted'] = false;// keep this local, not in the object or a state. 
             (stopped) && setStopped(false);
         } else if (currentStep >= 0){
@@ -130,8 +132,8 @@ export default function App(){
                     console.log('scheduling from inter-measure position', currentStep, getters['scheduledStep']);
                 }
                 setPlayback({type:'queue', time: getters['scheduledStepTime'], step: getters['scheduledStep']});
-                notesList = scheduleStep(getters, setters);
-                globalObj['scheduleList'] = [...globalObj['scheduleList'], ...notesList];
+                globalObj['notesList'] = scheduleStep(getters, setters);
+                globalObj['scheduleList'] = [...globalObj['scheduleList'], ...globalObj['notesList']];
             }
         }
     }
