@@ -19,7 +19,7 @@ import {AC} from './util/audio/AudioContext';
 import assignGlobalKeyPress from './util/eventHandlers/assignGlobalKeyPress';
 import assignGlobalClick from './util/eventHandlers/assignGlobalClick';
 import {useInterval} from './util/useInterval';
-import {intervalStartFromStop, intervalStartFromAdjust} from './util/scheduling/startInterval';
+import {intervalStartFromStop, intervalStartFromAdjust, intervalScheduleStep} from './util/scheduling/startInterval';
 import {clickToggleReducer} from './util/reducers/ClickToggleReducer';
 import {playbackReducer} from './util/reducers/PlaybackReducer';
 import * as eventsObj from './util/eventHandlers/events';
@@ -86,47 +86,10 @@ export default function App(){
         let getters = {stopped, playbackState, instrumentsArr, globalObj};
         if (stopped && globalObj['adjusted'] === false){
             intervalStartFromStop(AC.currentTime, playbackState, setPlayback, getters, globalObj, setters, setStopped)
-        } else if (globalObj['adjusted'] && globalObj['timeoutComplete']) {// play current step, set the seed/end to THAT step, then schedule following step
+        } else if (globalObj['adjusted'] && globalObj['timeoutComplete']) {
             intervalStartFromAdjust(AC.currentTime, getters, currentStep, playbackState, globalObj, setters, stopped, setStopped)
-            // console.log('scheduling from adjusted position');
-            // // turn this (adj) back off
-            // getters['scheduledStepTime'] = AC.currentTime + 0.01;
-            // getters['scheduledStep'] = currentStep;
-            // let stepsLeft = playbackState['totalSteps'] - getters['scheduledStep'];
-            // getters['scheduledEnd'] = getters['scheduledStepTime'] + (stepsLeft * playbackState['stepLength']);
-            // globalObj['notesList'] = scheduleStep(getters, setters);
-            // globalObj['adjusted'] = false;// keep this local, not in the object or a state. 
-            // (stopped) && setStopped(false);
         } else if (currentStep >= 0){
-            // calc the scheduled step scheduled time to activate
-            getters['scheduledStep'] = currentStep + 1;
-            let remainingMeasureSteps = playbackState['totalSteps'] - getters['scheduledStep'];
-            let scheduledDelta = playbackState['stepLength'] * remainingMeasureSteps;
-            getters['scheduledStepTime'] = playbackState['measureEnd'] - scheduledDelta;
-            getters['scheduledEnd'] = null//getters['scheduledStepTime'] + (stepsLeft * playbackState['stepLength']);
-
-            // find if step schedule is open
-            let openSchedule = playbackState['scheduledTime'] !== getters['scheduledStepTime'];
-
-            // find if in the money for next step
-            let _t_ = AC.currentTime;
-            let lookForward = _t_ + (intervalTime * 2 / 1000);
-            let inTheMoney = getters['scheduledStepTime'] >= _t_ && getters['scheduledStepTime'] < lookForward;
-            // schedule note to be played, first check if note is already scheduled
-            if (inTheMoney && openSchedule) {
-                console.log(playbackState);
-
-                if (currentStep >= playbackState['totalSteps'] - 1) {// if at end of measure
-                    getters['scheduledEnd'] = getters['scheduledStepTime'] + (playbackState['totalSteps'] * playbackState['stepLength']);
-                    getters['scheduledStep'] = 0;
-                    console.log('scheduling from end-of-measure position', currentStep, getters['scheduledStep'], getters['scheduledStepTime'], getters['scheduledEnd']);
-                } else {// if in middle of measure
-                    console.log('scheduling from inter-measure position', currentStep, getters['scheduledStep']);
-                }
-                setPlayback({type:'queue', time: getters['scheduledStepTime'], step: getters['scheduledStep']});
-                globalObj['notesList'] = scheduleStep(getters, setters);
-                globalObj['scheduleList'] = [...globalObj['scheduleList'], ...globalObj['notesList']];
-            }
+            intervalScheduleStep(getters, currentStep, playbackState, AC.currentTime, intervalTime, setPlayback, globalObj, setters)
         }
     }
 

@@ -12,6 +12,7 @@ export const intervalStartFromStop = (currentTime, playbackState, setPlayback, g
 }
 
 export const intervalStartFromAdjust = (currentTime, getters, currentStep, playbackState, globalObj, setters, stopped, setStopped) => {
+    // play current step, set the seed/end to THAT step, then schedule following step
     console.log('scheduling from adjusted position');
     getters['scheduledStepTime'] = currentTime + 0.01;
     getters['scheduledStep'] = currentStep;
@@ -20,4 +21,35 @@ export const intervalStartFromAdjust = (currentTime, getters, currentStep, playb
     globalObj['notesList'] = scheduleStep(getters, setters);
     globalObj['adjusted'] = false;
     (stopped) && setStopped(false);
+}
+
+export const intervalScheduleStep = (getters, currentStep, playbackState, currentTime, intervalTime, setPlayback, globalObj, setters) => {
+    // calc the scheduled step scheduled time to activate
+    getters['scheduledStep'] = currentStep + 1;
+    let remainingMeasureSteps = playbackState['totalSteps'] - getters['scheduledStep'];
+    let scheduledDelta = playbackState['stepLength'] * remainingMeasureSteps;
+    getters['scheduledStepTime'] = playbackState['measureEnd'] - scheduledDelta;
+    getters['scheduledEnd'] = null;
+
+    // find if step schedule is open
+    let openSchedule = playbackState['scheduledTime'] !== getters['scheduledStepTime'];
+
+    // find if in the money for next step
+    let lookForward = currentTime + (intervalTime * 2 / 1000);
+    let inTheMoney = getters['scheduledStepTime'] >= currentTime && getters['scheduledStepTime'] < lookForward;
+    // schedule note to be played, first check if note is already scheduled
+    if (inTheMoney && openSchedule) {
+        console.log(playbackState);
+
+        if (currentStep >= playbackState['totalSteps'] - 1) {// if at end of measure
+            getters['scheduledEnd'] = getters['scheduledStepTime'] + (playbackState['totalSteps'] * playbackState['stepLength']);
+            getters['scheduledStep'] = 0;
+            console.log('scheduling from end-of-measure position', currentStep, getters['scheduledStep'], getters['scheduledStepTime'], getters['scheduledEnd']);
+        } else {// if in middle of measure
+            console.log('scheduling from inter-measure position', currentStep, getters['scheduledStep']);
+        }
+        setPlayback({type: 'queue', time: getters['scheduledStepTime'], step: getters['scheduledStep']});
+        globalObj['notesList'] = scheduleStep(getters, setters);
+        globalObj['scheduleList'] = [...globalObj['scheduleList'], ...globalObj['notesList']];
+    }
 }
