@@ -57,11 +57,9 @@ export default function App(){
 
     // sequencer states
     let [instruments, setInstruments] = useState(Instruments(AC, totalSteps));
-    let [automationToggle, setAutomationToggle] = useState(true);
     let [playing, setPlaying] = useState(false);
     let [initialized, setInitialized] = useState(false);
     let [intervalTime, setIntervalTime] = useState(null);
-    let [measure, setMeasure] = useState([])
 
     // instruments state
     const InstrumentsListInit = []
@@ -78,25 +76,6 @@ export default function App(){
     assignGlobalClick(toggleState, setToggle)
     
     /////////////////// state togglers ///////////////////
-    function initialize(){
-        let SN = makeSilentNote(true);
-        SN.start(0);
-        SN.stop(0.05);
-    }
-    // produce a silent note for beat keeping
-    function makeSilentNote(init){
-        console.log('making note: time=', AC.currentTime);
-        let silentOsc = AC.createOscillator();
-        let silentGain = AC.createGain();
-        silentGain.gain.value = 0.0;
-        silentGain.gain.linearRampToValueAtTime(0.1, AC.currentTime + 0.09);
-        silentGain.gain.linearRampToValueAtTime(0, AC.currentTime + 0.15);
-        silentOsc.frequency.value = 666
-        silentOsc.connect(silentGain);
-        silentGain.connect(AC.destination);
-        if (init === false && AC.currentTime > 0) {setCurrentStep(currentStep + 1)}
-        return silentOsc
-    }
 
     // other init vars for the interval
     let setters = {setCurrentStep, setPlayback};
@@ -157,29 +136,8 @@ export default function App(){
     }
 
     //////////////////////////////////////////// HOOKS ////////////////////////////////////////////
-    // initialize audio context
-    useEffect(()=> {(AC.currentTime === 0) && initialize()},[])
-    
     // set the interval
     useInterval(startInterval, intervalTime)
-    
-    // this effect is for setting the new global current time and events that are triggered by play/pause events
-    useEffect(() => {
-        if (playing) {
-            // make a measure list
-            let t = AC.currentTime;
-            let measureList = [...Array(totalSteps - currentStep).keys()].map((ct) => {
-                let stepLength = 60 / globalBPM;
-                return (t + (ct * stepLength))
-            })
-            setMeasure(measureList);
-            AC.state==='suspended' && AC.resume();
-            setIntervalTime(15);
-        } else {
-            AC.state==='running' && AC.suspend();
-            setIntervalTime(null);
-        }
-    },[playing])
 
     // events after step changes
     useEffect(() => {
