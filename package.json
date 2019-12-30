@@ -15,7 +15,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "move": "rm -rf ./static ./images ./assets ; mv -f ./build/* ./ && rm -rf ./build ; cp -r ./assets/* ./",
+    "move": "rm -rf ./static ./images ./assets ; mv -f ./build/* ./ && rm -rf ./build ",
     "git-add": "git add .",
     "git-commit": "git commit -m '(re)building and deploying'",
     "git-push": "git push origin gh-pages",
