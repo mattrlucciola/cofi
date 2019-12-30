@@ -39,6 +39,7 @@ export const scheduleStep = (getters, setters) => {
     let snNote = SN.trigger(getters, setters, updateStepCount);
 
     // 3) schedule instruments step(n) to fire on next beat
+    console.log('getter inst', getters.instrumentsArr)
     let instrumentNotes = scheduleInstruments(getters)
     // 4) (above) record this time in history so it does not repeat on next fire
     // 5) record the note object so we can cancel their schedules
@@ -51,5 +52,5 @@ export const clearSchedule = (scheduleList) => {
         note.stop(0);
         note.onended = () => {};
     });
-    scheduleList = [];
+    return []
 }

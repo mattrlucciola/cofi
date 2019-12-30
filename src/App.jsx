@@ -14,7 +14,7 @@ import Transport from './components/Transport';
 import Instruments from './components/Instruments';
 
 // utilities
-import {scheduleNote, scheduleStep} from './util/Scheduler';
+import {scheduleStep} from './util/Scheduler';
 import {AC} from './util/audio/AudioContext';
 import assignGlobalKeyPress from './util/eventHandlers/assignGlobalKeyPress';
 import assignGlobalClick from './util/eventHandlers/assignGlobalClick';
@@ -25,7 +25,6 @@ import * as eventsObj from './util/eventHandlers/events';
 import './util/specifyBrowser';
 
 // global vars
-let stepList = []
 let scheduleList = [];
 let adjusted = false;
 let timeoutComplete = true;
@@ -95,7 +94,7 @@ export default function App(){
         silentOsc.frequency.value = 666
         silentOsc.connect(silentGain);
         silentGain.connect(AC.destination);
-        if (init===false && AC.currentTime > 0) {setCurrentStep(currentStep + 1)}
+        if (init === false && AC.currentTime > 0) {setCurrentStep(currentStep + 1)}
         return silentOsc
     }
 
@@ -125,7 +124,6 @@ export default function App(){
             adjusted = false;// keep this local, not in the object or a state. 
             (stopped) && setStopped(false);
         } else if (currentStep >= 0){
-
             // calc the scheduled step scheduled time to activate
             getters['scheduledStep'] = currentStep + 1;
             let remainingMeasureSteps = playbackState['totalSteps'] - getters['scheduledStep'];
@@ -185,13 +183,14 @@ export default function App(){
 
     // events after step changes
     useEffect(() => {
-        if (currentStep >= totalSteps) {
-            setCurrentStep(0)
-        };
-        if (currentStep > 0 && currentStep < totalSteps) {
-            scheduleStep(AC, currentStep, measure[0], globalBPM, instruments)
+        if (playing) {
+            AC.resume();
+            setIntervalTime(12);
+        } else {
+            AC.suspend();
+            setIntervalTime(null);
         }
-    }, [currentStep])
+    }, [playing])
     
     return (
         <div className="App">

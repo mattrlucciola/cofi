@@ -6,14 +6,10 @@ export const toggleStop = (AC, setCurrentStep, setPlaying, setInitialized) => {
     AC = new (window.AudioContext || window.webkitAudioContext)();
     setInitialized(false);
 }
-// export const togglePause = (playing, setPlaying) => {
-//     setPlaying(!playing);
-// }
 export const toggleAdvance = (_t_, currentStep, setCurrentStep) => {
     let change = (_t_ === ',' && (_t_ !== '.' || _t_ !== true)) ? -1 : 1;
     setCurrentStep(currentStep + change);
 }
-
 
 export const togglePause = (AC, scheduleList, playing, setPlaying, playbackState, setPlayback, currentStep) => {
 
@@ -29,7 +25,7 @@ export const togglePause = (AC, scheduleList, playing, setPlaying, playbackState
     };
     if (playing) {
         AC.state === 'running' && AC.suspend();
-        clearSchedule(scheduleList)
+        scheduleList = clearSchedule(scheduleList)
         setPlaying(false);
     };
 }
