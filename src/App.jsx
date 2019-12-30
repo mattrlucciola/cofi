@@ -27,6 +27,8 @@ import './util/specifyBrowser';
 // global vars
 let stepList = []
 let scheduleList = [];
+let adjusted = false;
+let timeoutComplete = true;
 
 // main
 export default function App(){
@@ -48,6 +50,7 @@ export default function App(){
         totalSteps: 32,
     });
     const [currentStep, setCurrentStep] = useState(-1);
+    const [stopped, setStopped] = useState(true);
     let [globalBPM, setGlobalBPM] = useState('128');
     let [inputBPM, setInputBPM] = useState(globalBPM);
     let [totalSteps, setTotalSteps] = useState(16);
@@ -60,6 +63,10 @@ export default function App(){
     let [initialized, setInitialized] = useState(false);
     let [intervalTime, setIntervalTime] = useState(null);
     let [measure, setMeasure] = useState([])
+
+    // instruments state
+    const InstrumentsListInit = []
+    let [instrumentsArr, setInstrumentsArr] = useState(InstrumentsListInit);
 
     // set all keypress events here
     const bindsObj = {
@@ -92,40 +99,62 @@ export default function App(){
         return silentOsc
     }
 
-    const updateStep = () => {
-        let newStep = currentStep + 1;
-        setCurrentStep(newStep);
-    }
+    // other init vars for the interval
+    let setters = {setCurrentStep, setPlayback};
+    let notesList = [];
     const startInterval = () => {
+        let getters = {stopped, adjusted, playbackState, instrumentsArr};
+        if (stopped && adjusted === false){// if starting from stopped
+            let _t_ = AC.currentTime + 0.01;
+            let measureEnd = _t_ + (playbackState['totalSteps'] * playbackState['stepLength']);
+            setPlayback({type:'measureEnd', time:measureEnd});
+            console.log('scheduling from stopped position');
+            getters['scheduledStepTime'] = _t_;
+            getters['scheduledStep'] = 0;
+            getters['scheduledEnd'] = getters['scheduledStepTime'] + playbackState['totalSteps'] * playbackState['stepLength'];
+            notesList = scheduleStep(getters, setters);
+            setStopped(false);
+        } else if (adjusted && timeoutComplete) {// play current step, set the seed/end to THAT step, then schedule following step
+            console.log('scheduling from adjusted position');
+            // turn this (adj) back off
+            getters['scheduledStepTime'] = AC.currentTime + 0.01;
+            getters['scheduledStep'] = currentStep;
+            let stepsLeft = playbackState['totalSteps'] - getters['scheduledStep'];
+            getters['scheduledEnd'] = getters['scheduledStepTime'] + (stepsLeft * playbackState['stepLength']);
+            notesList = scheduleStep(getters, setters);
+            adjusted = false;// keep this local, not in the object or a state. 
+            (stopped) && setStopped(false);
+        } else if (currentStep >= 0){
 
-        let lookForward = intervalTime * 2 / 1000;
-        let stepLength = 60 / globalBPM;
+            // calc the scheduled step scheduled time to activate
+            getters['scheduledStep'] = currentStep + 1;
+            let remainingMeasureSteps = playbackState['totalSteps'] - getters['scheduledStep'];
+            let scheduledDelta = playbackState['stepLength'] * remainingMeasureSteps;
+            getters['scheduledStepTime'] = playbackState['measureEnd'] - scheduledDelta;
+            getters['scheduledEnd'] = null//getters['scheduledStepTime'] + (stepsLeft * playbackState['stepLength']);
 
-        // find beat based on time
-        let t = AC.currentTime;
-        let tf = t + lookForward;
+            // find if step schedule is open
+            let openSchedule = playbackState['scheduledTime'] !== getters['scheduledStepTime'];
 
-        // all the notes to be scheduled
-        let filteredMeasure = measure.filter((stepTime) => {
-            return stepTime > t && stepTime <= tf && !stepList.includes(stepTime) && t > 0.2;
-        })
-        
-        // schedule the notes
-        for (let idx = 0; idx < filteredMeasure.length; idx++) {
-            
-            let stepTime = filteredMeasure[idx];
-            // schedule all notes
-            let note = makeSilentNote(false);
-            scheduleNote(AC, {'source':note}, stepTime, stepLength);
+            // find if in the money for next step
+            let _t_ = AC.currentTime;
+            let lookForward = _t_ + (intervalTime * 2 / 1000);
+            let inTheMoney = getters['scheduledStepTime'] >= _t_ && getters['scheduledStepTime'] < lookForward;
+            // schedule note to be played, first check if note is already scheduled
+            if (inTheMoney && openSchedule) {
+                console.log(playbackState);
 
-            // save all notes
-            let newStepList = [...stepList, stepTime];
-            if (newStepList.length > Number(totalSteps)) {newStepList = newStepList.slice(1)};
-            stepList = newStepList;
-        }
-        // slide the measure forward
-        if ((measure[measure.length-1] + stepLength) < tf || AC.currentTime > measure[0]) {
-            setMeasure(measure.map((elem) => {return elem + stepLength}))
+                if (currentStep >= playbackState['totalSteps'] - 1) {// if at end of measure
+                    getters['scheduledEnd'] = getters['scheduledStepTime'] + (playbackState['totalSteps'] * playbackState['stepLength']);
+                    getters['scheduledStep'] = 0;
+                    console.log('scheduling from end-of-measure position', currentStep, getters['scheduledStep'], getters['scheduledStepTime'], getters['scheduledEnd']);
+                } else {// if in middle of measure
+                    console.log('scheduling from inter-measure position', currentStep, getters['scheduledStep']);
+                }
+                setPlayback({type:'queue', time:getters['scheduledStepTime'], step:getters['scheduledStep']});
+                notesList = scheduleStep(getters, setters);
+                scheduleList = [...scheduleList, ...notesList];
+            }
         }
     }
 
