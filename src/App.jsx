@@ -14,7 +14,7 @@ import Transport from './components/Transport';
 import Instruments from './components/Instruments';
 
 // utilities
-import {scheduleStep} from './util/Scheduler';
+import {scheduleStep} from './util/scheduling/Scheduler';
 import {AC} from './util/audio/AudioContext';
 import assignGlobalKeyPress from './util/eventHandlers/assignGlobalKeyPress';
 import assignGlobalClick from './util/eventHandlers/assignGlobalClick';
@@ -54,6 +54,7 @@ export default function App(){
     const [currentStep, setCurrentStep] = useState(-1);
     const [stopped, setStopped] = useState(true);
     const [playing, setPlaying] = useState(false);
+    const [intervalTime, setIntervalTime] = useState(null);
     let [globalBPM, setGlobalBPM] = useState('128');
     let [inputBPM, setInputBPM] = useState(globalBPM);
     let [totalSteps, setTotalSteps] = useState(16);
@@ -61,7 +62,6 @@ export default function App(){
 
     // sequencer states
     let [instruments, setInstruments] = useState(Instruments(AC, totalSteps));
-    let [intervalTime, setIntervalTime] = useState(null);
 
     // instruments state
     const InstrumentsListInit = []

@@ -1,6 +1,6 @@
-import {clearSchedule} from '../Scheduler';
+import {clearSchedule} from '../scheduling/Scheduler';
 
-export const adjustStep = (AC, playing, playbackState, newStep, setCurrentStep, globalObj) => {
+export const adjustStep = (AC, playing, playbackState, setCurrentStep, globalObj, newStep) => {
     // 1) cancel all scheduled events
     AC.status !== 'suspend' && AC.suspend();
     clearSchedule(globalObj['scheduleList']);

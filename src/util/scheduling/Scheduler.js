@@ -1,5 +1,5 @@
-import {AC} from './AudioContext';
-import {SilentNote} from '../instruments/SilentNote';
+import {AC} from '../AudioContext';
+import {SilentNote} from '../../instruments/SilentNote';
 
 const updateStepCount = (getters, setters) => {
     

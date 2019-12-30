@@ -1,11 +1,11 @@
-import {clearSchedule} from '../Scheduler';
+import {clearSchedule} from '../scheduling/Scheduler';
 import {adjustStep} from './adjustStep';
 
 export const toggleAdvance = (eventKey, currentStep, AC, playing, playbackState, setCurrentStep, globalObj) => {
     let newStep;
     if      (eventKey === ',') {newStep = currentStep - 1}
     else if (eventKey === '.') {newStep = currentStep + 1}
-    adjustStep(AC, playing, playbackState, newStep, setCurrentStep, globalObj['intervalId'], globalObj)
+    adjustStep(AC, playing, playbackState, setCurrentStep, globalObj, newStep)
 }
 
 export const togglePause = (AC, playing, setPlaying, playbackState, setPlayback, currentStep, globalObj) => {
