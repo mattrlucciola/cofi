@@ -8,7 +8,6 @@ import './App.css';
 
 // components
 import Sequencer from './components/sequencer/Sequencer';
-import Header from './components/Header';
 import TimingController from './components/TimingController';
 import Transport from './components/Transport';
 import Instruments from './components/Instruments';
@@ -17,7 +16,7 @@ import Instruments from './components/Instruments';
 import {AC} from './util/audio/AudioContext';
 import assignGlobalKeyPress from './util/eventHandlers/assignGlobalKeyPress';
 import assignGlobalClick from './util/eventHandlers/assignGlobalClick';
-import {useInterval} from './util/useInterval';
+import {useInterval} from './util/scheduling/useInterval';
 import {startInterval} from './util/scheduling/startInterval';
 import {clickToggleReducer} from './util/reducers/ClickToggleReducer';
 import {playbackReducer} from './util/reducers/PlaybackReducer';
@@ -36,9 +35,7 @@ const globalObj = {
 // main
 export default function App(){
     // destructuring
-    const {
-        toggleAdvance, togglePause,
-    } = eventsObj;
+    const {toggleAdvance, togglePause,} = eventsObj;
 
     // states
     // click toggle
@@ -98,7 +95,6 @@ export default function App(){
     
     return (
         <div className="App">
-            <Header />
             <Transport togglePause={togglePause} playing={playing} />
             <TimingController bpmObj={{globalBPM, setGlobalBPM, inputBPM, setInputBPM}} stepObj={{totalSteps, currentStep}} />
             <Sequencer instruments={instruments} setInstruments={setInstruments} timing={{globalBPM, currentStep, timeSignature}} />
