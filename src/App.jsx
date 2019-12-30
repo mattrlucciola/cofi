@@ -28,6 +28,7 @@ import './util/specifyBrowser';
 let scheduleList = [];
 let adjusted = false;
 let timeoutComplete = true;
+let clt = '';
 
 // main
 export default function App(){
@@ -139,6 +140,10 @@ export default function App(){
 
     // events after step changes
     useEffect(() => {
+        if (clt !== '') {
+            clearInterval(clt);
+            clt = '';
+        }
         if (playing) {
             AC.resume();
             setIntervalTime(12);
