@@ -1,4 +1,4 @@
-export default function assignGlobalKeyBinds(bindsObj){
+export default function assignGlobalKeyPress(bindsObj){
     // set all keypress events here
     document.onkeypress = (e) => {
         let eventKey = e.key;

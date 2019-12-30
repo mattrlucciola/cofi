@@ -16,7 +16,8 @@ import Instruments from './components/Instruments';
 // utilities
 import {scheduleNote, scheduleStep} from './util/Scheduler';
 import {AC} from './util/audio/AudioContext';
-import assignGlobalKeyBinds from './util/eventHandlers/assignGlobalKeyBinds';
+import assignGlobalKeyPress from './util/eventHandlers/assignGlobalKeyPress';
+import assignGlobalClick from './util/eventHandlers/assignGlobalClick';
 import {useInterval} from './util/useInterval';
 import {clickToggleReducer} from './util/reducers/ClickToggleReducer';
 import {playbackReducer} from './util/reducers/PlaybackReducer';
@@ -35,7 +36,10 @@ export default function App(){
     } = eventsObj;
 
     // states
-    
+    // click toggle
+    let [toggleState, setToggle] = useReducer(clickToggleReducer, {
+        addInstrumentOpen: false,
+    });
     // timing states
     let [playbackState, setPlayback] = useReducer(playbackReducer, {
         measure: -1,
@@ -64,7 +68,8 @@ export default function App(){
         ',': () => toggleAdvance(',', currentStep, setCurrentStep),
         '.': () => toggleAdvance('.', currentStep, setCurrentStep),
     }
-    assignGlobalKeyBinds(bindsObj)
+    assignGlobalKeyPress(bindsObj)
+    assignGlobalClick(toggleState, setToggle)
     
     /////////////////// state togglers ///////////////////
     function initialize(){
