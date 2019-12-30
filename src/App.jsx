@@ -33,7 +33,7 @@ let timeoutComplete = true;
 export default function App(){
     // destructuring
     const {
-        toggleStop, toggleAdvance, togglePause, togglePlayPause,
+        toggleAdvance, togglePause,
     } = eventsObj;
 
     // states
@@ -50,6 +50,7 @@ export default function App(){
     });
     const [currentStep, setCurrentStep] = useState(-1);
     const [stopped, setStopped] = useState(true);
+    const [playing, setPlaying] = useState(false);
     let [globalBPM, setGlobalBPM] = useState('128');
     let [inputBPM, setInputBPM] = useState(globalBPM);
     let [totalSteps, setTotalSteps] = useState(16);
@@ -57,8 +58,6 @@ export default function App(){
 
     // sequencer states
     let [instruments, setInstruments] = useState(Instruments(AC, totalSteps));
-    let [playing, setPlaying] = useState(false);
-    let [initialized, setInitialized] = useState(false);
     let [intervalTime, setIntervalTime] = useState(null);
 
     // instruments state
@@ -67,8 +66,7 @@ export default function App(){
 
     // set all keypress events here
     const bindsObj = {
-        ' ': (e) => togglePlayPause(e, AC, initialized, initialize, setInitialized, togglePause, playing, setPlaying, playbackState, setPlayback, scheduleList),
-        '?': () => toggleStop(AC, setCurrentStep, setPlaying, setInitialized),
+        ' ': () => togglePause(AC, scheduleList, playing, setPlaying, playbackState, setPlayback),
         ',': () => toggleAdvance(',', currentStep, setCurrentStep),
         '.': () => toggleAdvance('.', currentStep, setCurrentStep),
     }
