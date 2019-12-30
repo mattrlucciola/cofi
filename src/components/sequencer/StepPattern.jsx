@@ -30,7 +30,6 @@ export default function StepPattern({instruments, toggleStep, currentStep, playb
         let instElems = [];
         for (let instId in instruments) {
             let instrument = instruments[instId];
-            // if (instId==='kick' || instId==='snare') {console.log(instId, instrument);}
             let measureList = [];
             instElems.push(
                 <div className='instrument-container' key={`ic-${instId}`}>

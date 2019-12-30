@@ -8,7 +8,9 @@ import React from 'react';
 // style
 
 // components
-import StepPattern from './StepPattern';
+// import StepPattern from './StepPattern';
+import SequencerLeft from './left/SequencerLeft';
+import SequencerRight from './right/SequencerRight';
 
 // utilities
 
@@ -16,17 +18,19 @@ import StepPattern from './StepPattern';
 
 // main
 
-export default function Sequencer({instruments, setInstruments, currentStep, playbackObj}){
-    const toggleStep = (instName, stepCt) => {
-        let instrmtsCopy = {...instruments};
-        let {activated, ...other} = instrmtsCopy[instName]['pattern'][stepCt];
-        instrmtsCopy[instName]['pattern'][stepCt] = {'activated': !activated, ...other};
-        setInstruments(instrmtsCopy)
-    };
+export default function Sequencer({instruments, setInstruments, currentStep, playbackObj, handleClickStep, toggleStateObj, instrumentsStateObj}){
+    // const toggleStep = (instName, stepCt) => {
+    //     let instrmtsCopy = {...instruments};
+    //     let {activated, ...other} = instrmtsCopy[instName]['pattern'][stepCt];
+    //     instrmtsCopy[instName]['pattern'][stepCt] = {'activated': !activated, ...other};
+    //     setInstruments(instrmtsCopy)
+    // };
 
     return(
         <div className='sequencer'>
-            <StepPattern instruments={instruments} toggleStep={toggleStep} currentStep={currentStep} playbackObj={playbackObj} />
+            {/* <StepPattern instruments={instruments} toggleStep={toggleStep} currentStep={currentStep} playbackObj={playbackObj} /> */}
+            <SequencerLeft instrumentsStateObj={instrumentsStateObj} playbackObj={playbackObj} toggleStateObj={toggleStateObj} />
+            <SequencerRight instrumentsStateObj={instrumentsStateObj} playbackObj={playbackObj} handleClickStep={handleClickStep} toggleStateObj={toggleStateObj} />
         </div>
     )
 }

@@ -1,5 +1,5 @@
 // import {connectSrcGainDest} from '../util/NodeMgmt';
-import Synth from './Synth';
+import Synth from '../../components/Synth';
 
 // const kick808 = (AC) => {
 //     // create source object

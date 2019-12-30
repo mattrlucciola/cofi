@@ -30,3 +30,9 @@ export const togglePause = (AC, playing, setPlaying, playbackState, setPlayback,
 export const toggleBPM = () => {
     document.getElementById('bpm-input').focus()
 }
+
+export const handleClickStep = (e, AC, playing, playbackState, setCurrentStep, globalObj) => {
+    let newStep = Number(e.target.attributes.value.value);
+    adjustStep(AC, playing, playbackState, setCurrentStep, globalObj, newStep);
+    // AC, playing, playbackState, setCurrentStep, globalObj, newStep
+}

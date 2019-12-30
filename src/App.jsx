@@ -10,7 +10,7 @@ import './App.css';
 import Sequencer from './components/sequencer/Sequencer';
 import TimingController from './components/TimingController';
 import Transport from './components/Transport';
-import Instruments from './components/Instruments';
+import Instruments from './instruments/audio/Instruments';
 
 // utilities
 import {AC} from './util/audio/AudioContext';
@@ -20,7 +20,7 @@ import {useInterval} from './util/scheduling/useInterval';
 import {startInterval} from './util/scheduling/startInterval';
 import {clickToggleReducer} from './util/reducers/ClickToggleReducer';
 import {playbackReducer} from './util/reducers/PlaybackReducer';
-import {toggleAdvance, togglePause, toggleBPM} from './util/eventHandlers/events';
+import {toggleAdvance, togglePause, toggleBPM, handleClickStep} from './util/eventHandlers/events';
 import './util/specifyBrowser';
 
 // global vars
@@ -69,6 +69,7 @@ export default function App(){
     assignGlobalClick(toggleState, setToggle)
 
     //////////////////////////////////////////// HOOKS ////////////////////////////////////////////
+    
     // set the interval
     useInterval(() => {startInterval(stopped, playbackState, instrumentsArr, globalObj, setCurrentStep, setPlayback, AC.currentTime, setStopped, currentStep, intervalTime)}, intervalTime)
 
@@ -91,7 +92,7 @@ export default function App(){
         <div className="App">
             <Transport togglePause={togglePause} playing={playing} />
             <TimingController currentStep={currentStep} playbackObj={{playbackState, setPlayback}} />
-            <Sequencer instruments={instruments} setInstruments={setInstruments} currentStep={currentStep} playbackObj={{playbackState, setPlayback}} />
+            <Sequencer instruments={instruments} setInstruments={setInstruments} currentStep={currentStep} playbackObj={{playbackState, setPlayback}} handleClickStep={handleClickStep} toggleStateObj={{toggleState, setToggle}} instrumentsStateObj={{instrumentsArr, setInstrumentsArr}} />
         </div>
     );
 }

@@ -22,9 +22,15 @@ SilentNote.prototype.trigger = function(getters, setters, callback){
     let gainValue = this.init ? 0 : this.gainValue;
     this.source['gain'].gain.setValueAtTime(gainValue, 0);
 
+    // this.source['gain'].gain.exponentialRampToValueAtTime(0.001, currentStepTimeStop);
+    // this.source['source'].frequency.exponentialRampToValueAtTime(0.01, currentStepTimeStop);
+    // const ts = (time) => {return `${(time) ? time: AC.currentTime}`.slice(0,8);}
+    // console.log(`in silent note:::   ti:${currentStepTimeStart}, currentStepTimeStop:${currentStepTimeStop}`);
+    
     this.source['source'].start(0);
     this.source['source'].stop(currentStepTimeStop);
 
+    // console.log(`Step  #1x & 2a) SilentNote: (SILENTNOTE):    time:${ts()}    ${(this.init) ? 'init = true':''}      start:${ts(ti)} end:${ts(tf)}     current-step:${this.playbackState.currentStep} scheduled-step:${nextStep}    callback appended?:${!!callback}`);
     if (!!callback && !this.init) {this.source['source'].onended = () => {callback(getters, setters)}}
     return [this.source['source']]
 }

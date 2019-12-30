@@ -14,7 +14,7 @@ import React from 'react';
 // global vars
 
 // main
-export default function Step({toggleStep, instId, timing}){
+export default function Step({toggleStep, instId, timing, instrumentsStateObj}){
     let {currentStep, stepCt, stepInfo} = timing;
     let triggered = `${currentStep===stepCt}`;
     let activated = `${stepInfo['activated']}`;
