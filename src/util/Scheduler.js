@@ -62,3 +62,11 @@ export const scheduleStep = (AC, step, startTime, globalBPM, instruments) => {
         }
     }
 }
+
+export const clearSchedule = (scheduleList) => {
+    scheduleList.forEach(note => {
+        note.stop(0);
+        note.onended = () => {};
+    });
+    scheduleList = [];
+}

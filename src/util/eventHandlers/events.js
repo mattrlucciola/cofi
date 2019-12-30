@@ -1,3 +1,4 @@
+import {clearSchedule} from '../Scheduler';
 export const toggleStop = (AC, setCurrentStep, setPlaying, setInitialized) => {
     setCurrentStep(-1);
     setPlaying(false);
@@ -13,7 +14,8 @@ export const toggleAdvance = (_t_, currentStep, setCurrentStep) => {
     setCurrentStep(currentStep + change);
 }
 
-export const togglePause = (AC, scheduleList, playing, setPlaying, playbackState, setPlayback) => {
+
+export const togglePause = (AC, scheduleList, playing, setPlaying, playbackState, setPlayback, currentStep) => {
 
     // if youre turning it on (aka switching from pause to play), set the seed time and play the current-step's note
     if (!playing) {

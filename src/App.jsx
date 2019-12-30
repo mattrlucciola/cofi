@@ -25,6 +25,7 @@ import './util/specifyBrowser';
 
 // global vars
 let stepList = []
+let scheduleList = [];
 
 // main
 export default function App(){
@@ -34,10 +35,17 @@ export default function App(){
     } = eventsObj;
 
     // states
+    
     // timing states
+    let [playbackState, setPlayback] = useReducer(playbackReducer, {
+        measure: -1,
+        bpm: 128 * 2,
+        timeSignature: 4,
+        totalSteps: 32,
+    });
+    const [currentStep, setCurrentStep] = useState(-1);
     let [globalBPM, setGlobalBPM] = useState('128');
     let [inputBPM, setInputBPM] = useState(globalBPM);
-    let [currentStep, setCurrentStep] = useState(-1);
     let [totalSteps, setTotalSteps] = useState(16);
     let [timeSignature, setTimeSignature] = useState(4);
 
@@ -51,7 +59,7 @@ export default function App(){
 
     // set all keypress events here
     const bindsObj = {
-        ' ': (e) => togglePlayPause(e, AC, initialized, initialize, setInitialized, togglePause, playing, setPlaying),
+        ' ': (e) => togglePlayPause(e, AC, initialized, initialize, setInitialized, togglePause, playing, setPlaying, playbackState, setPlayback, scheduleList),
         '?': () => toggleStop(AC, setCurrentStep, setPlaying, setInitialized),
         ',': () => toggleAdvance(',', currentStep, setCurrentStep),
         '.': () => toggleAdvance('.', currentStep, setCurrentStep),
