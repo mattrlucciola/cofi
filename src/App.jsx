@@ -15,7 +15,6 @@ import Instruments from './components/Instruments';
 
 // utilities
 import {scheduleNote, scheduleStep} from './util/Scheduler';
-import {checkTiming} from './util/timing/checkTiming';
 import {AC} from './util/audio/AudioContext';
 import assignGlobalKeyBinds from './util/eventHandlers/assignGlobalKeyBinds';
 import * as eventsObj from './util/eventHandlers/events';
