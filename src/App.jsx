@@ -1,5 +1,5 @@
 // react
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useReducer, useEffect} from 'react';
 
 // modules
 
@@ -17,6 +17,9 @@ import Instruments from './components/Instruments';
 import {scheduleNote, scheduleStep} from './util/Scheduler';
 import {AC} from './util/audio/AudioContext';
 import assignGlobalKeyBinds from './util/eventHandlers/assignGlobalKeyBinds';
+import {useInterval} from './util/useInterval';
+import {clickToggleReducer} from './util/reducers/ClickToggleReducer';
+import {playbackReducer} from './util/reducers/PlaybackReducer';
 import * as eventsObj from './util/eventHandlers/events';
 import './util/specifyBrowser';
 
@@ -56,27 +59,6 @@ export default function App(){
     assignGlobalKeyBinds(bindsObj)
     
     /////////////////// state togglers ///////////////////
-    // godly function made by Dan Abramov -- source: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
-    const useInterval = (callback, delay) => {
-        const savedCallback = useRef();
-
-        // Remember the latest callback.
-        useEffect(() => {
-            savedCallback.current = callback;
-        }, [callback]);
-
-        // Set up the interval.
-        useEffect(() => {
-            function tick() {
-                savedCallback.current();
-            }
-            if (delay !== null) {
-                tick()
-                let id = setInterval(tick, delay);
-                return () => clearInterval(id);
-            }
-        }, [delay]);
-    }
     function initialize(){
         let SN = makeSilentNote(true);
         SN.start(0);
