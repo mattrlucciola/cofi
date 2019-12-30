@@ -16,8 +16,7 @@ import StepPattern from './StepPattern';
 
 // main
 
-export default function Sequencer({instruments, setInstruments, timing}){
-    let {globalBPM, currentStep, timeSignature} = timing;
+export default function Sequencer({instruments, setInstruments, currentStep, playbackObj}){
     const toggleStep = (instName, stepCt) => {
         let instrmtsCopy = {...instruments};
         let {activated, ...other} = instrmtsCopy[instName]['pattern'][stepCt];
@@ -27,7 +26,7 @@ export default function Sequencer({instruments, setInstruments, timing}){
 
     return(
         <div className='sequencer'>
-            <StepPattern instruments={instruments} toggleStep={toggleStep} timing={{timeSignature, currentStep}} />
+            <StepPattern instruments={instruments} toggleStep={toggleStep} currentStep={currentStep} playbackObj={playbackObj} />
         </div>
     )
 }

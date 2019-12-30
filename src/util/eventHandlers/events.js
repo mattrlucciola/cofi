@@ -26,3 +26,7 @@ export const togglePause = (AC, playing, setPlaying, playbackState, setPlayback,
         setPlaying(false);
     };
 }
+
+export const toggleBPM = () => {
+    document.getElementById('bpm-input').focus()
+}

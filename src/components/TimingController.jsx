@@ -1,7 +1,7 @@
 // App > TimingController
 
 // react
-import React from 'react';
+import React, {useState} from 'react';
 
 // modules
 
@@ -12,38 +12,65 @@ import React from 'react';
 // utilities
 
 // global vars
-let IB = '128';
+const maxBPM = 250;
+const minBPM = 50;
 
 // main
-export default function TimingController({bpmObj, stepObj}){
-    let {globalBPM, setGlobalBPM, inputBPM, setInputBPM} = bpmObj;
-    let {currentStep} = stepObj;
-    
-    function handleChange(e){
-        const newBPM = (e.target.validity.valid && e.target.value.length <= 3 && Number(e.target.value) <= 200) ? e.target.value : String(IB);
-        setInputBPM(newBPM);
+export default function TimingController({currentStep, playbackObj}){
+    // destructuring
+    const {playbackState, setPlayback} = playbackObj;
+
+    // state
+    const [transBPM, setTransBPM] = useState(playbackState['bpm'])
+
+    // functions
+    const validateBPMInput = (e) => {
+        const target = e.target;
+        const inputIsBlank = !target.value
+        const inputIsValid = target.validity.valid || inputIsBlank;
+        const inputLengthIsLessThan3 = target.value.length <= 3;
+        const inputIsLessThanMaxBPM = Number(target.value) <= maxBPM;
+        if (inputIsValid && inputLengthIsLessThan3 && inputIsLessThanMaxBPM) {
+            if (inputIsBlank) {
+                setTransBPM('')
+            } else {
+                setTransBPM(Number(target.value))
+            }
+        }
     }
+    const handleKeyPress = (e) => {
+        const eventKey = e.key;
+        [' ', 'Enter'].includes(eventKey) && e.currentTarget.blur()
+    }
+    const handleChange = (e) => {validateBPMInput(e)}
     function handleBlur(e){
-        let bpm = e.target.value;
-        if (bpm > 50 && bpm < 200) {
-            setGlobalBPM(bpm);
-            setInputBPM(bpm);
+        e.preventDefault()
+        let bpm = e.currentTarget.length ? e.currentTarget[0].value : e.target.value;
+        if (bpm >= minBPM && bpm <= maxBPM) {
+            setPlayback({type: 'bpm', value: bpm})
+            setTransBPM(bpm);
+        } else if (bpm < minBPM) {
+            setPlayback({type: 'bpm', value: minBPM})
+            setTransBPM(minBPM);
+        } else if (bpm > maxBPM) {
+            setPlayback({type: 'bpm', value: maxBPM})
+            setTransBPM(maxBPM);
         } else {
-            setGlobalBPM(globalBPM);
-            setInputBPM(globalBPM)
+            setPlayback({type: 'bpm', value: playbackState['bpm']})
+            setTransBPM(playbackState['bpm'])
         }
     }
     function displayStepCount(){
         return(
-            <div className='beat-count'>beat count: {currentStep + 1}</div>
+            <div className='beat-count'>Step Count: {currentStep + 1}</div>
         )
     }
     return (
         <div className='bpm-container'>
             <div className='bpm-control'>
-                <input id='bpm-input' type="text" pattern="[0-9]*" onBlur={handleBlur} onChange={handleChange} value={inputBPM} />
+                <input id='bpm-input' type="text" pattern="[0-9]*" onBlur={handleBlur} onChange={handleChange} onKeyPress={handleKeyPress} value={transBPM} />
             </div>
-            {(currentStep >= 0) && displayStepCount()}
+            {displayStepCount()}
         </div>
     )
 }

@@ -15,8 +15,8 @@ import Step from './Step';
 // global vars
 
 // main
-export default function StepPattern({instruments, toggleStep, timing}){
-    let {timeSignature, currentStep} = timing;
+export default function StepPattern({instruments, toggleStep, currentStep, playbackObj}){
+    const {timeSignature} = playbackObj['playbackState'];
 
     function measureDiv(stepList) {
         return (

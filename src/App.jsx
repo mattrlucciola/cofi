@@ -20,7 +20,7 @@ import {useInterval} from './util/scheduling/useInterval';
 import {startInterval} from './util/scheduling/startInterval';
 import {clickToggleReducer} from './util/reducers/ClickToggleReducer';
 import {playbackReducer} from './util/reducers/PlaybackReducer';
-import * as eventsObj from './util/eventHandlers/events';
+import {toggleAdvance, togglePause, toggleBPM} from './util/eventHandlers/events';
 import './util/specifyBrowser';
 
 // global vars
@@ -34,9 +34,6 @@ const globalObj = {
 
 // main
 export default function App(){
-    // destructuring
-    const {toggleAdvance, togglePause,} = eventsObj;
-
     // states
     // click toggle
     let [toggleState, setToggle] = useReducer(clickToggleReducer, {
@@ -45,7 +42,7 @@ export default function App(){
     // timing states
     let [playbackState, setPlayback] = useReducer(playbackReducer, {
         measure: -1,
-        bpm: 128 * 2,
+        bpm: 128,
         timeSignature: 4,
         totalSteps: 16,
     });
@@ -53,13 +50,9 @@ export default function App(){
     const [stopped, setStopped] = useState(true);
     const [playing, setPlaying] = useState(false);
     const [intervalTime, setIntervalTime] = useState(null);
-    let [globalBPM, setGlobalBPM] = useState('128');
-    let [inputBPM, setInputBPM] = useState(globalBPM);
-    let [totalSteps, setTotalSteps] = useState(16);
-    let [timeSignature, setTimeSignature] = useState(4);
 
     // sequencer states
-    let [instruments, setInstruments] = useState(Instruments(AC, totalSteps));
+    let [instruments, setInstruments] = useState(Instruments(AC, playbackState['totalSteps']));
 
     // instruments state
     const InstrumentsListInit = []
@@ -70,6 +63,7 @@ export default function App(){
         ' ': () => togglePause(AC, playing, setPlaying, playbackState, setPlayback, currentStep, globalObj),
         ',': () => toggleAdvance(',', currentStep, AC, playing, playbackState, setCurrentStep, globalObj),
         '.': () => toggleAdvance('.', currentStep, AC, playing, playbackState, setCurrentStep, globalObj),
+        'Enter': () => toggleBPM(),
     }
     assignGlobalKeyPress(bindsObj)
     assignGlobalClick(toggleState, setToggle)
@@ -96,8 +90,8 @@ export default function App(){
     return (
         <div className="App">
             <Transport togglePause={togglePause} playing={playing} />
-            <TimingController bpmObj={{globalBPM, setGlobalBPM, inputBPM, setInputBPM}} stepObj={{totalSteps, currentStep}} />
-            <Sequencer instruments={instruments} setInstruments={setInstruments} timing={{globalBPM, currentStep, timeSignature}} />
+            <TimingController currentStep={currentStep} playbackObj={{playbackState, setPlayback}} />
+            <Sequencer instruments={instruments} setInstruments={setInstruments} currentStep={currentStep} playbackObj={{playbackState, setPlayback}} />
         </div>
     );
 }
