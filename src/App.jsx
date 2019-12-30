@@ -14,12 +14,11 @@ import Transport from './components/Transport';
 import Instruments from './components/Instruments';
 
 // utilities
-import {scheduleStep} from './util/scheduling/Scheduler';
 import {AC} from './util/audio/AudioContext';
 import assignGlobalKeyPress from './util/eventHandlers/assignGlobalKeyPress';
 import assignGlobalClick from './util/eventHandlers/assignGlobalClick';
 import {useInterval} from './util/useInterval';
-import {intervalStartFromStop, intervalStartFromAdjust, intervalScheduleStep} from './util/scheduling/startInterval';
+import {startInterval} from './util/scheduling/startInterval';
 import {clickToggleReducer} from './util/reducers/ClickToggleReducer';
 import {playbackReducer} from './util/reducers/PlaybackReducer';
 import * as eventsObj from './util/eventHandlers/events';
@@ -77,25 +76,10 @@ export default function App(){
     }
     assignGlobalKeyPress(bindsObj)
     assignGlobalClick(toggleState, setToggle)
-    
-    /////////////////// state togglers ///////////////////
-
-    // other init vars for the interval
-    let setters = {setCurrentStep, setPlayback};
-    const startInterval = () => {
-        let getters = {stopped, playbackState, instrumentsArr, globalObj};
-        if (stopped && globalObj['adjusted'] === false){
-            intervalStartFromStop(AC.currentTime, playbackState, setPlayback, getters, globalObj, setters, setStopped)
-        } else if (globalObj['adjusted'] && globalObj['timeoutComplete']) {
-            intervalStartFromAdjust(AC.currentTime, getters, currentStep, playbackState, globalObj, setters, stopped, setStopped)
-        } else if (currentStep >= 0){
-            intervalScheduleStep(getters, currentStep, playbackState, AC.currentTime, intervalTime, setPlayback, globalObj, setters)
-        }
-    }
 
     //////////////////////////////////////////// HOOKS ////////////////////////////////////////////
     // set the interval
-    useInterval(startInterval, intervalTime)
+    useInterval(() => {startInterval(stopped, playbackState, instrumentsArr, globalObj, setCurrentStep, setPlayback, AC.currentTime, setStopped, currentStep, intervalTime)}, intervalTime)
 
     // events after step changes
     useEffect(() => {

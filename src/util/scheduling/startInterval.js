@@ -1,4 +1,5 @@
 import {scheduleStep} from './Scheduler';
+
 export const intervalStartFromStop = (currentTime, playbackState, setPlayback, getters, globalObj, setters, setStopped) => {
     let currentTimeAdj = currentTime + 0.01;
     let measureEnd = currentTimeAdj + (playbackState['totalSteps'] * playbackState['stepLength']);
@@ -51,5 +52,17 @@ export const intervalScheduleStep = (getters, currentStep, playbackState, curren
         setPlayback({type: 'queue', time: getters['scheduledStepTime'], step: getters['scheduledStep']});
         globalObj['notesList'] = scheduleStep(getters, setters);
         globalObj['scheduleList'] = [...globalObj['scheduleList'], ...globalObj['notesList']];
+    }
+}
+
+export const startInterval = (stopped, playbackState, instrumentsArr, globalObj, setCurrentStep, setPlayback, currentTime, setStopped, currentStep, intervalTime) => {
+    let getters = {stopped, playbackState, instrumentsArr, globalObj};
+    let setters = {setCurrentStep, setPlayback};
+    if (stopped && globalObj['adjusted'] === false){
+        intervalStartFromStop(currentTime, playbackState, setPlayback, getters, globalObj, setters, setStopped)
+    } else if (globalObj['adjusted'] && globalObj['timeoutComplete']) {
+        intervalStartFromAdjust(currentTime, getters, currentStep, playbackState, globalObj, setters, stopped, setStopped)
+    } else if (currentStep >= 0){
+        intervalScheduleStep(getters, currentStep, playbackState, currentTime, intervalTime, setPlayback, globalObj, setters)
     }
 }
