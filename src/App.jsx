@@ -19,7 +19,7 @@ import {AC} from './util/audio/AudioContext';
 import assignGlobalKeyPress from './util/eventHandlers/assignGlobalKeyPress';
 import assignGlobalClick from './util/eventHandlers/assignGlobalClick';
 import {useInterval} from './util/useInterval';
-import {fxn} from './util/scheduling/startInterval';
+import {intervalStartFromStop, intervalStartFromAdjust} from './util/scheduling/startInterval';
 import {clickToggleReducer} from './util/reducers/ClickToggleReducer';
 import {playbackReducer} from './util/reducers/PlaybackReducer';
 import * as eventsObj from './util/eventHandlers/events';
@@ -84,27 +84,19 @@ export default function App(){
     let setters = {setCurrentStep, setPlayback};
     const startInterval = () => {
         let getters = {stopped, playbackState, instrumentsArr, globalObj};
-        if (stopped && globalObj['adjusted'] === false){// if starting from stopped
-            fxn(AC.currentTime, playbackState, setPlayback, getters, globalObj, setters, setStopped)
-            // let _t_ = AC.currentTime + 0.01;
-            // let measureEnd = _t_ + (playbackState['totalSteps'] * playbackState['stepLength']);
-            // setPlayback({type:'measureEnd', time:measureEnd});
-            // console.log('scheduling from stopped position');
-            // getters['scheduledStepTime'] = _t_;
-            // getters['scheduledStep'] = 0;
-            // getters['scheduledEnd'] = getters['scheduledStepTime'] + playbackState['totalSteps'] * playbackState['stepLength'];
-            // notesList = scheduleStep(getters, setters);
-            // setStopped(false);
+        if (stopped && globalObj['adjusted'] === false){
+            intervalStartFromStop(AC.currentTime, playbackState, setPlayback, getters, globalObj, setters, setStopped)
         } else if (globalObj['adjusted'] && globalObj['timeoutComplete']) {// play current step, set the seed/end to THAT step, then schedule following step
-            console.log('scheduling from adjusted position');
-            // turn this (adj) back off
-            getters['scheduledStepTime'] = AC.currentTime + 0.01;
-            getters['scheduledStep'] = currentStep;
-            let stepsLeft = playbackState['totalSteps'] - getters['scheduledStep'];
-            getters['scheduledEnd'] = getters['scheduledStepTime'] + (stepsLeft * playbackState['stepLength']);
-            globalObj['notesList'] = scheduleStep(getters, setters);
-            globalObj['adjusted'] = false;// keep this local, not in the object or a state. 
-            (stopped) && setStopped(false);
+            intervalStartFromAdjust(AC.currentTime, getters, currentStep, playbackState, globalObj, setters, stopped, setStopped)
+            // console.log('scheduling from adjusted position');
+            // // turn this (adj) back off
+            // getters['scheduledStepTime'] = AC.currentTime + 0.01;
+            // getters['scheduledStep'] = currentStep;
+            // let stepsLeft = playbackState['totalSteps'] - getters['scheduledStep'];
+            // getters['scheduledEnd'] = getters['scheduledStepTime'] + (stepsLeft * playbackState['stepLength']);
+            // globalObj['notesList'] = scheduleStep(getters, setters);
+            // globalObj['adjusted'] = false;// keep this local, not in the object or a state. 
+            // (stopped) && setStopped(false);
         } else if (currentStep >= 0){
             // calc the scheduled step scheduled time to activate
             getters['scheduledStep'] = currentStep + 1;
