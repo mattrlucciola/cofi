@@ -1,4 +1,6 @@
-export const adjustStep = (AC, clt, newStep, setCurrentStep, playing, playbackState, adjusted, timeoutComplete) => {
+import {clearSchedule} from '../Scheduler';
+
+export const adjustStep = (AC, scheduleList, playing, playbackState, newStep, setCurrentStep, globalObj) => {
     // 1) cancel all scheduled events
     AC.status !== 'suspend' && AC.suspend();
     clearSchedule(scheduleList);
@@ -13,14 +15,14 @@ export const adjustStep = (AC, clt, newStep, setCurrentStep, playing, playbackSt
     
     // 2) change the step (keep a locally-scoped, non-state var handy in case of timing issues)
     // 3) re-seed the measure at that location, schedule the next step, and play immediately
-    adjusted = true;
+    globalObj['adjusted'] = true;
     if (playing) {
-        timeoutComplete = false;
-        if (clt !== '') {clearInterval(clt)}
-        clt = setTimeout(() => {
+        globalObj['timeoutComplete'] = false;
+        if (globalObj['intervalId'] !== '') {clearInterval(globalObj['intervalId'])}
+        globalObj['intervalId'] = setTimeout(() => {
             AC.resume();
-            clt = '';
-            timeoutComplete = true;
+            globalObj['intervalId'] = '';
+            globalObj['timeoutComplete'] = true;
         }, 150)
     }
 }

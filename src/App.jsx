@@ -26,9 +26,11 @@ import './util/specifyBrowser';
 
 // global vars
 let scheduleList = [];
-let adjusted = false;
-let timeoutComplete = true;
-let clt = '';
+const globalObj = {
+    adjusted: false,
+    timeoutComplete: true,
+    intervalId: '',
+};
 
 // main
 export default function App(){
@@ -47,7 +49,7 @@ export default function App(){
         measure: -1,
         bpm: 128 * 2,
         timeSignature: 4,
-        totalSteps: 32,
+        totalSteps: 16,
     });
     const [currentStep, setCurrentStep] = useState(-1);
     const [stopped, setStopped] = useState(true);
@@ -68,8 +70,8 @@ export default function App(){
     // set all keypress events here
     const bindsObj = {
         ' ': () => togglePause(AC, scheduleList, playing, setPlaying, playbackState, setPlayback),
-        ',': () => toggleAdvance(',', currentStep, setCurrentStep),
-        '.': () => toggleAdvance('.', currentStep, setCurrentStep),
+        ',': () => toggleAdvance(',', currentStep, AC, scheduleList, playing, playbackState, setCurrentStep, globalObj),
+        '.': () => toggleAdvance('.', currentStep, AC, scheduleList, playing, playbackState, setCurrentStep, globalObj),
     }
     assignGlobalKeyPress(bindsObj)
     assignGlobalClick(toggleState, setToggle)
@@ -80,8 +82,8 @@ export default function App(){
     let setters = {setCurrentStep, setPlayback};
     let notesList = [];
     const startInterval = () => {
-        let getters = {stopped, adjusted, playbackState, instrumentsArr};
-        if (stopped && adjusted === false){// if starting from stopped
+        let getters = {stopped, playbackState, instrumentsArr, globalObj};
+        if (stopped && globalObj['adjusted'] === false){// if starting from stopped
             let _t_ = AC.currentTime + 0.01;
             let measureEnd = _t_ + (playbackState['totalSteps'] * playbackState['stepLength']);
             setPlayback({type:'measureEnd', time:measureEnd});
@@ -91,7 +93,7 @@ export default function App(){
             getters['scheduledEnd'] = getters['scheduledStepTime'] + playbackState['totalSteps'] * playbackState['stepLength'];
             notesList = scheduleStep(getters, setters);
             setStopped(false);
-        } else if (adjusted && timeoutComplete) {// play current step, set the seed/end to THAT step, then schedule following step
+        } else if (globalObj['adjusted'] && globalObj['timeoutComplete']) {// play current step, set the seed/end to THAT step, then schedule following step
             console.log('scheduling from adjusted position');
             // turn this (adj) back off
             getters['scheduledStepTime'] = AC.currentTime + 0.01;
@@ -99,7 +101,7 @@ export default function App(){
             let stepsLeft = playbackState['totalSteps'] - getters['scheduledStep'];
             getters['scheduledEnd'] = getters['scheduledStepTime'] + (stepsLeft * playbackState['stepLength']);
             notesList = scheduleStep(getters, setters);
-            adjusted = false;// keep this local, not in the object or a state. 
+            globalObj['adjusted'] = false;// keep this local, not in the object or a state. 
             (stopped) && setStopped(false);
         } else if (currentStep >= 0){
             // calc the scheduled step scheduled time to activate
@@ -127,7 +129,7 @@ export default function App(){
                 } else {// if in middle of measure
                     console.log('scheduling from inter-measure position', currentStep, getters['scheduledStep']);
                 }
-                setPlayback({type:'queue', time:getters['scheduledStepTime'], step:getters['scheduledStep']});
+                setPlayback({type:'queue', time: getters['scheduledStepTime'], step: getters['scheduledStep']});
                 notesList = scheduleStep(getters, setters);
                 scheduleList = [...scheduleList, ...notesList];
             }
@@ -140,9 +142,9 @@ export default function App(){
 
     // events after step changes
     useEffect(() => {
-        if (clt !== '') {
-            clearInterval(clt);
-            clt = '';
+        if (globalObj['intervalId'] !== '') {
+            clearInterval(globalObj['intervalId']);
+            globalObj['intervalId'] = '';
         }
         if (playing) {
             AC.resume();

@@ -1,14 +1,14 @@
 import {clearSchedule} from '../Scheduler';
-export const toggleStop = (AC, setCurrentStep, setPlaying, setInitialized) => {
-    setCurrentStep(-1);
-    setPlaying(false);
-    AC.close();
-    AC = new (window.AudioContext || window.webkitAudioContext)();
-    setInitialized(false);
-}
-export const toggleAdvance = (_t_, currentStep, setCurrentStep) => {
-    let change = (_t_ === ',' && (_t_ !== '.' || _t_ !== true)) ? -1 : 1;
-    setCurrentStep(currentStep + change);
+import {adjustStep} from './adjustStep';
+
+export const toggleAdvance = (eventKey, currentStep, AC, scheduleList, playing, playbackState, setCurrentStep, globalObj) => {
+    // let change = (eventKey === ',' && (eventKey !== '.' || eventKey !== true)) ? -1 : 1;
+    // setCurrentStep(currentStep + change);
+    let newStep;
+    if      (eventKey === ',') {newStep = currentStep - 1}
+    else if (eventKey === '.') {newStep = currentStep + 1}
+    // adjustStep(newStep, playing, playbackState, setCurrentStep)
+    adjustStep(AC, scheduleList, playing, playbackState, newStep, setCurrentStep, globalObj['intervalId'], globalObj)
 }
 
 export const togglePause = (AC, scheduleList, playing, setPlaying, playbackState, setPlayback, currentStep) => {
@@ -28,13 +28,4 @@ export const togglePause = (AC, scheduleList, playing, setPlaying, playbackState
         scheduleList = clearSchedule(scheduleList)
         setPlaying(false);
     };
-}
-
-export function togglePlayPause(e, AC, initialized, initialize, setInitialized, togglePause, playing, setPlaying, playbackState, setPlayback, scheduleList) {
-    if (AC.state === 'suspended' && initialized === false) {
-        console.log('not initialized yet...');
-        initialize();
-        setInitialized(true);
-    }
-    togglePause(AC, scheduleList, playing, setPlaying, playbackState, setPlayback);
 }
