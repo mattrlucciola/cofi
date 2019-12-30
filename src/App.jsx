@@ -17,15 +17,19 @@ import Instruments from './components/Instruments';
 import {scheduleNote, scheduleStep} from './util/Scheduler';
 import {checkTiming} from './util/timing/checkTiming';
 import {AC} from './util/audio/AudioContext';
+import assignGlobalKeyBinds from './util/eventHandlers/assignGlobalKeyBinds';
+import * as eventsObj from './util/eventHandlers/events';
 import './util/specifyBrowser';
 
 // global vars
-let thelist = [];
 let stepList = []
 
 // main
 export default function App(){
     // destructuring
+    const {
+        toggleStop, toggleAdvance, togglePause, togglePlayPause,
+    } = eventsObj;
 
     // states
     // timing states
@@ -44,35 +48,15 @@ export default function App(){
     let [measure, setMeasure] = useState([])
 
     // set all keypress events here
-    document.onkeypress = (e) => {
-        let key = e.key;
-        // console.log(key);
-        // if we're in the main body scope
-        if (document.activeElement === document.body) {
-            e.preventDefault()
-            // console.log(key);
-            if (key === 'p'){handleSequencerToggle(e, automationToggle, setAutomationToggle)}
-            if (key === ' '){
-                if (AC.state === 'suspended' && initialized===false) {console.log('not initialized yet...');initialize(); setInitialized(true);}
-                togglePause(e);
-            }
-            if (key === '?') {toggleStop()}
-            if (key === ',' || key === '.') {toggleAdvance(key)}
-            }
-        else {
-            if (key === 'Escape') {document.activeElement.blur()}
-        }
+    const bindsObj = {
+        ' ': (e) => togglePlayPause(e, AC, initialized, initialize, setInitialized, togglePause, playing, setPlaying),
+        '?': () => toggleStop(AC, setCurrentStep, setPlaying, setInitialized),
+        ',': () => toggleAdvance(',', currentStep, setCurrentStep),
+        '.': () => toggleAdvance('.', currentStep, setCurrentStep),
     }
-
-    /////////////////// event handlers ///////////////////
-    const handleTimeSignatureChange = (newTimeSignature) => {setTimeSignature(newTimeSignature)}
-    function handleSequencerToggle(){setAutomationToggle(!automationToggle)}
+    assignGlobalKeyBinds(bindsObj)
     
     /////////////////// state togglers ///////////////////
-    const toggleStop = () => {setCurrentStep(-1);setPlaying(false);AC.close(); AC = new (window.AudioContext || window.webkitAudioContext)(); setInitialized(false)}
-    const togglePause = () => {setPlaying(!playing);}
-    const toggleAdvance = (_t_) => {let change = (_t_===',' && (_t_!=='.' || _t_!==true)) ? -1 : 1;setCurrentStep(currentStep + change)}
-
     // godly function made by Dan Abramov -- source: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
     const useInterval = (callback, delay) => {
         const savedCallback = useRef();
@@ -184,16 +168,14 @@ export default function App(){
         if (currentStep > 0 && currentStep < totalSteps) {
             scheduleStep(AC, currentStep, measure[0], globalBPM, instruments)
         }
-        thelist = checkTiming(thelist, AC.currentTime)
     }, [currentStep])
     
     return (
         <div className="App">
             <Header />
             <Transport togglePause={togglePause} playing={playing} />
-            <TimingController bpmObj={{globalBPM, setGlobalBPM, inputBPM, setInputBPM, handleTimeSignatureChange}} stepObj={{totalSteps, currentStep}} />
-            <Sequencer instruments={instruments} setInstruments={setInstruments} timing={{globalBPM, currentStep, timeSignature}} toggles={{handleSequencerToggle, automationToggle}} />
-            {/* <Visualizer globalBPM={globalBPM} /> */}
+            <TimingController bpmObj={{globalBPM, setGlobalBPM, inputBPM, setInputBPM}} stepObj={{totalSteps, currentStep}} />
+            <Sequencer instruments={instruments} setInstruments={setInstruments} timing={{globalBPM, currentStep, timeSignature}} />
         </div>
     );
 }

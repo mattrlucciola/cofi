@@ -4,7 +4,7 @@ export function checkTiming(thelist, t){
     let difflist = [];
     thelist.forEach((elem, idx) => {
         if (idx > 0) {
-            let diff = thelist[idx+1] - elem;
+            let diff = thelist[idx + 1] - elem;
             difflist.push(diff);
         }
     });
@@ -12,5 +12,6 @@ export function checkTiming(thelist, t){
     difflist.forEach(element => {
         sum += element
     });
-    console.log(`avg: ${sum/difflist.length}`, difflist);
+    console.log(`avg: ${sum / difflist.length}`, difflist);
+    return thelist
 }
