@@ -16,15 +16,18 @@ import Instruments from './components/Instruments';
 // utilities
 import {scheduleNote, scheduleStep} from './util/Scheduler';
 import {checkTiming} from './util/timing/checkTiming';
-import './util/specifyBrowser';
 import {AC} from './util/audio/AudioContext';
+import './util/specifyBrowser';
 
 // global vars
 let thelist = [];
 let stepList = []
 
 // main
-export default function App() {
+export default function App(){
+    // destructuring
+
+    // states
     // timing states
     let [globalBPM, setGlobalBPM] = useState('128');
     let [inputBPM, setInputBPM] = useState(globalBPM);

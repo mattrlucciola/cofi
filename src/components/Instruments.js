@@ -1,24 +1,24 @@
-import {connectSrcGainDest} from '../util/NodeMgmt';
+// import {connectSrcGainDest} from '../util/NodeMgmt';
 import Synth from './Synth';
 
-const kick808 = (AC) => {
-    // create source object
-    let source = {};
-    source['source'] = AC.createOscillator();
-    source['source'].frequency.value = 150;
-    source['gain'] = AC.createGain();
+// const kick808 = (AC) => {
+//     // create source object
+//     let source = {};
+//     source['source'] = AC.createOscillator();
+//     source['source'].frequency.value = 150;
+//     source['gain'] = AC.createGain();
     
-    // connect to speakers
-    connectSrcGainDest(source, AC.destination);
+//     // connect to speakers
+//     connectSrcGainDest(source, AC.destination);
 
-    // set envelope
-    let ti = AC.currentTime;
-    let tf = ti + 0.45;
-    source['gain'].gain.setValueAtTime(0.5, ti);
-    source['gain'].gain.exponentialRampToValueAtTime(0.001, tf);
-    source['source'].start(ti);
-    source['source'].stop(tf);
-}
+//     // set envelope
+//     let ti = AC.currentTime;
+//     let tf = ti + 0.45;
+//     source['gain'].gain.setValueAtTime(0.5, ti);
+//     source['gain'].gain.exponentialRampToValueAtTime(0.001, tf);
+//     source['source'].start(ti);
+//     source['source'].stop(tf);
+// }
 export default function Instruments(AC, totalSteps){
     // init instruments state
     let initInstState = {'triggered': false, 'activated': false, 'automation':{}}
