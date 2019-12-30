@@ -15,6 +15,7 @@ import Instruments from './components/Instruments';
 
 // utilities
 import {scheduleNote, scheduleStep} from './util/Scheduler';
+import specifiBrowser from './util/specifyBrowser';
 
 // global vars
 let thelist = [];
