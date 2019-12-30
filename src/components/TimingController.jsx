@@ -20,7 +20,6 @@ export default function TimingController({bpmObj, stepObj}){
     let {currentStep} = stepObj;
     
     function handleChange(e){
-        // const newBPM = (e.target.validity.valid && e.target.value.length <= 3 && Number(e.target.value) <= 200) ? e.target.value : String(inputBPM);
         const newBPM = (e.target.validity.valid && e.target.value.length <= 3 && Number(e.target.value) <= 200) ? e.target.value : String(IB);
         setInputBPM(newBPM);
     }

@@ -15,29 +15,12 @@ import Instruments from './components/Instruments';
 
 // utilities
 import {scheduleNote, scheduleStep} from './util/Scheduler';
-import specifiBrowser from './util/specifyBrowser';
+import {checkTiming} from './util/timing/checkTiming';
+import './util/specifyBrowser';
+import {AC} from './util/audio/AudioContext';
 
 // global vars
 let thelist = [];
-function checkTiming(thelist, t){
-    thelist.push(t);
-    let sum = 0;
-    let difflist = [];
-    thelist.forEach((elem, idx) => {
-        if (idx > 0) {
-            let diff = thelist[idx+1] - elem;
-            difflist.push(diff);
-        }
-    });
-    difflist.pop();
-    difflist.forEach(element => {
-        sum += element
-    });
-    console.log(`avg: ${sum/difflist.length}`, difflist);
-}
-
-// set the global audio context here
-let AC = new (window.AudioContext || window.webkitAudioContext)()
 let stepList = []
 
 // main
@@ -198,7 +181,7 @@ export default function App() {
         if (currentStep > 0 && currentStep < totalSteps) {
             scheduleStep(AC, currentStep, measure[0], globalBPM, instruments)
         }
-        checkTiming(thelist, AC.currentTime)
+        thelist = checkTiming(thelist, AC.currentTime)
     }, [currentStep])
     
     return (
